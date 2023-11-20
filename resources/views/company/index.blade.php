@@ -40,7 +40,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td class="text-center" colspan="5">company not found</td>
+                    <td class="text-center" colspan="5">Company not found</td>
                 </tr>
             @endif
         </tbody>

@@ -7,7 +7,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProjectController;
  
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login'); // Redirect to the login route
 });
  
 Route::controller(AuthController::class)->group(function () {
@@ -18,7 +18,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'loginAction')->name('login.action');
   
     Route::get('logout', 'logout')->middleware('auth')->name('logout');
-    Route::post('store', 'store')->name('profile.store');
+    // Route::post('store', 'store')->name('profile.store');
 
 });
   
