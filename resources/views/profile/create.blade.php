@@ -1,6 +1,6 @@
 @extends('layouts.app')
   
-@section('title', 'Create Project')
+@section('title', 'Create User')
   
 @section('contents')
     <!-- <h1 class="mb-0">Add project</h1> -->
@@ -9,16 +9,16 @@
         @csrf
         <div class="row mb-3">
             <div class="col">
-                <input type="text" name="name" class="form-control" placeholder="Name">
+                <input type="text" name="name" class="form-control" placeholder="Name" required>
             </div>
             <div class="col">
-                <input type="text" name="email" class="form-control" placeholder="Email">
+                <input type="text" name="email" class="form-control" placeholder="Email" required>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col">
                 <select class="form-control" name="role_name">
-                <option value="MSA">Master Super Admin</option>
+                    <option value="MSA">Master Super Admin</option>
                     <option value="AC">Account</option>
                     <option value="Admin">Administrator</option>
                     <option value="CM">Contract Manager</option>
@@ -33,7 +33,7 @@
                 </select>
             </div>
             <div class="col">
-            <input name="password" type="password" class="form-control form-control-user @error('password')is-invalid @enderror" id="exampleInputPassword" placeholder="Password">
+            <input name="password" type="password" class="form-control form-control-user @error('password')is-invalid @enderror" id="exampleInputPassword" placeholder="Password" required>
                 @error('password')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror

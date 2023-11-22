@@ -18,11 +18,12 @@
       <span>Dashboard</span></a>
   </li>
   
-  <!-- <li class="nav-item">
-    <a class="nav-link" href="{{ route('roles') }}">
+  <li class="nav-item">
+    <a class="nav-link" href="">
       <i class="fas fa-fw fa-wrench"></i>
-      <span>Role</span></a>
-  </li> -->
+      <span>Task Planning</span>
+    </a>
+  </li>
   
   <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
@@ -37,6 +38,7 @@
               <a class="collapse-item" href="{{ route('roles') }}">CRUD Role</a>
               <a class="collapse-item" href="{{ route('company') }}">CRUD Company</a>
             @endif
+              <a class="collapse-item" href="{{ route('project') }}">CRUD Project</a>
               <a class="collapse-item" href="{{ route('project') }}">CRUD Project</a>
           </div>
       </div>
