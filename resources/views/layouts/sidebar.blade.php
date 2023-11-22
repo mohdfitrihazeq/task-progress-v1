@@ -39,15 +39,15 @@
               <a class="collapse-item" href="{{ route('company') }}">CRUD Company</a>
             @endif
               <a class="collapse-item" href="{{ route('project') }}">CRUD Project</a>
-              <a class="collapse-item" href="{{ route('project') }}">CRUD Project</a>
+              <a class="collapse-item" href="{{ route('profile') }}">CRUD SYstem Login USer</a>
           </div>
       </div>
   </li>
 
   <li class="nav-item">
-    <a class="nav-link" href="{{ route('profile')}}">
+    <a class="nav-link" href="">
       <i class="fas fa-fw fa-folder"></i>
-      <span>Profile</span></a>
+      <span>Change Password</span></a>
   </li>
   
   <!-- Divider -->
