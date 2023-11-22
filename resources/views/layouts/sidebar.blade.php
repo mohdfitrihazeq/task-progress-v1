@@ -39,7 +39,7 @@
               <a class="collapse-item" href="{{ route('company') }}">CRUD Company</a>
             @endif
               <a class="collapse-item" href="{{ route('project') }}">CRUD Project</a>
-              <a class="collapse-item" href="{{ route('profile') }}">CRUD SYstem Login USer</a>
+              <a class="collapse-item" href="{{ route('profile') }}">CRUD System Login User</a>
           </div>
       </div>
   </li>
