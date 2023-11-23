@@ -95,7 +95,9 @@ class UserProfileController extends Controller
     public function edit(string $id)
     {
         $profile = User::findOrFail($id);
-        return view('profile.edit', compact('profile'));
+        $roles = Role::all();  // Retrieve all roles or adjust as needed
+
+        return view('profile.edit', compact('profile', 'roles'));
     }
 
     public function update(Request $request, string $id)

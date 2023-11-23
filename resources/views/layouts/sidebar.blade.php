@@ -37,9 +37,9 @@
             @if(Auth::user()->role_name == 'MSA')
               <a class="collapse-item" href="{{ route('roles') }}">CRUD Role</a>
               <a class="collapse-item" href="{{ route('company') }}">CRUD Company</a>
+              <a class="collapse-item" href="{{ route('profile') }}">CRUD System Login User</a>
             @endif
               <a class="collapse-item" href="{{ route('project') }}">CRUD Project</a>
-              <a class="collapse-item" href="{{ route('profile') }}">CRUD System Login User</a>
           </div>
       </div>
   </li>

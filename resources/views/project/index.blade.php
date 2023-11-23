@@ -2,7 +2,7 @@
   
 @section('contents')
     <div class="d-flex align-items-center justify-content-between">
-        <h1 class="mb-0">List Project</h1>
+        <h1 class="mb-0">CRUD Project</h1>
         <a href="{{ route('project.create') }}" class="btn btn-primary">Add Project</a>
     </div>
     <hr />
