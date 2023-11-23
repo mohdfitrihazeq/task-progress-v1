@@ -34,7 +34,7 @@
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Maintenance</h6>
-            @if(Auth::user()->role_name == 'MSA')
+            @if(Auth::user()->role_name == 'Master Super Admin - MSA')
               <a class="collapse-item" href="{{ route('roles') }}">CRUD Role</a>
               <a class="collapse-item" href="{{ route('company') }}">CRUD Company</a>
               <a class="collapse-item" href="{{ route('profile') }}">CRUD System Login User</a>
