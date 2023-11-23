@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
   
 use Illuminate\Http\Request;
 use App\Models\Company;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
  
 class CompanyController extends Controller
 {
@@ -30,17 +32,29 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'company_name' => ['required', Rule::unique('companies', 'company_name')],
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Create a new company
         Company::create($request->all());
- 
-        return redirect()->route('company')->with('success', 'company added successfully');
+
+        // Redirect to the company index page with success message
+        return redirect()->route('company')->with('success', 'Company added successfully');
     }
   
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $company_id)
     {
-        $company = Company::findOrFail($id);
+        $company = Company::findOrFail($company_id);
   
         return view('company.show', compact('company'));
     }
@@ -48,9 +62,9 @@ class CompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $company_id)
     {
-        $company = Company::findOrFail($id);
+        $company = Company::findOrFail($company_id);
   
         return view('company.edit', compact('company'));
     }
@@ -58,9 +72,9 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $company_id)
     {
-        $company = Company::findOrFail($id);
+        $company = Company::findOrFail($company_id);
   
         $company->update($request->all());
   
@@ -70,9 +84,9 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $company_id)
     {
-        $company = Company::findOrFail($id);
+        $company = Company::findOrFail($company_id);
   
         $company->delete();
   

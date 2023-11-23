@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserProfileController;
  
 Route::get('/', function () {
     return redirect()->route('login'); // Redirect to the login route
@@ -57,16 +58,25 @@ Route::middleware('auth')->group(function () {
         Route::delete('destroy/{id}', 'destroy')->name('company.destroy');
     });
 
-    Route::controller(AuthController::class)->prefix('profile')->group(function () {
-        Route::get('', 'index')->name('profile');
-        Route::get('create', 'create')->name('profile.create');
-        Route::post('store', 'store')->name('profile.store');
-        Route::get('show/{id}', 'show')->name('profile.show');
-        Route::get('edit/{id}', 'edit')->name('profile.edit');
-        Route::put('edit/{id}', 'update')->name('profile.update');
-        Route::delete('destroy/{id}', 'destroy')->name('profile.destroy');
-    });
+    // Route::controller(AuthController::class)->prefix('profile')->group(function () {
+    //     Route::get('', 'index')->name('profile');
+    //     Route::get('create', 'create')->name('profile.create');
+    //     Route::post('store', 'store')->name('profile.store');
+    //     Route::get('show/{id}', 'show')->name('profile.show');
+    //     Route::get('edit/{id}', 'edit')->name('profile.edit');
+    //     Route::put('edit/{id}', 'update')->name('profile.update');
+    //     Route::delete('destroy/{id}', 'destroy')->name('profile.destroy');
+    // });
  
+    Route::middleware('auth')->prefix('profile')->group(function () {
+        Route::get('', [UserProfileController::class, 'index'])->name('profile');
+        Route::get('create', [UserProfileController::class, 'create'])->name('profile.create');
+        Route::post('store', [UserProfileController::class, 'store'])->name('profile.store');
+        Route::get('show/{id}', [UserProfileController::class, 'show'])->name('profile.show');
+        Route::get('edit/{id}', [UserProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('edit/{id}', [UserProfileController::class, 'update'])->name('profile.update');
+        Route::delete('destroy/{id}', [UserProfileController::class, 'destroy'])->name('profile.destroy');
+    });
     // Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
 
 });

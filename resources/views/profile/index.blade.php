@@ -2,7 +2,7 @@
   
 @section('contents')
     <div class="d-flex align-items-center justify-content-between">
-        <h1 class="mb-0">List User</h1>
+        <h1 class="mb-0">CRUD System Login User</h1>
         <a href="{{ route('profile.create') }}" class="btn btn-primary">Add User</a>
     </div>
     <hr />
@@ -15,6 +15,7 @@
         <thead class="table-primary">
             <tr>
                 <th>#</th>
+                <th>User Login Name</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
@@ -26,6 +27,7 @@
                 @foreach($profile as $rs)
                     <tr>
                         <td class="align-middle">{{ $loop->iteration }}</td>
+                        <td class="align-middle">{{ $rs->user_name }}</td>
                         <td class="align-middle">{{ $rs->name }}</td>
                         <td class="align-middle">{{ $rs->email }}</td>
                         <td class="align-middle">{{ $rs->role_name }}</td>

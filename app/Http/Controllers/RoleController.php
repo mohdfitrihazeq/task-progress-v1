@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
   
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
  
 class RoleController extends Controller
 {
@@ -30,6 +32,17 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+
+         // Validate the request data
+         $validator = Validator::make($request->all(), [
+            'role_name' => ['required', Rule::unique('roles', 'role_name')],
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         Role::create($request->all());
  
         return redirect()->route('roles')->with('success', 'role added successfully');

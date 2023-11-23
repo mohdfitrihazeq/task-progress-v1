@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
   
 use Illuminate\Http\Request;
 use App\Models\Project;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
  
 class ProjectController extends Controller
 {
@@ -30,6 +33,17 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'project_name' => ['required', Rule::unique('projects', 'project_name')],
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         Project::create($request->all());
  
         return redirect()->route('project')->with('success', 'project added successfully');

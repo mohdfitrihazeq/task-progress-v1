@@ -9,6 +9,7 @@
         @csrf
         <div class="row mb-3">
             <div class="col">
+                <!-- <label class="form-label">Company</label> -->
                 <input type="text" name="company_name" class="form-control" placeholder="Company Name" required>
             </div>
             <!-- <div class="col">
@@ -23,7 +24,15 @@
                 <textarea class="form-control" name="description" placeholder="Descriptoin"></textarea>
             </div>
         </div> -->
- 
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
        
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">

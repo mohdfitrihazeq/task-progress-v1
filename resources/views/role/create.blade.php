@@ -8,10 +8,10 @@
     <form action="{{ route('roles.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row mb-3">
-            <!-- <div class="col">
-                <input type="text" name="role_name" class="form-control" placeholder="Role">
-            </div> -->
             <div class="col">
+                <input type="text" name="role_name" class="form-control" placeholder="Role" required>
+            </div>
+            <!-- <div class="col">
                 <select class="form-control" name="role_name">
                     <option value="MSA">Master Super Admin</option>
                     <option value="AC">Account</option>
@@ -26,7 +26,7 @@
                     <option value="SSA">Super Super Admin</option>
                     <option value="VIEW">Viewing</option>
                 </select>
-            </div>
+            </div> -->
             <!-- <div class="col">
                 <input type="text" name="price" class="form-control" placeholder="Price">
             </div> -->
@@ -39,10 +39,19 @@
                 <textarea class="form-control" name="description" placeholder="Descriptoin"></textarea>
             </div>
         </div> -->
- 
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="row">
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ route('roles') }}" class="btn btn-secondary">Back</a>
             </div>
         </div>
     </form>
