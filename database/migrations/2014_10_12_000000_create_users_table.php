@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('user_name');
             $table->string('name');
-            $table->string('role_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreignId('company_id')->constrained('companies'); 
+            // $table->foreignId('role_id')->constrained('roles'); 
+            $table->string('role_name'); 
             $table->rememberToken();
             $table->timestamps();
         });

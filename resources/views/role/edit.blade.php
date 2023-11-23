@@ -12,8 +12,8 @@
         <div class="row">
             <div class="col mb-3">
                 <label class="form-label">Role</label>
-                <!-- <input type="text" name="role_name" class="form-control" placeholder="Role" value="{{ $role->role_name }}" > -->
-                <select class="form-control" name="role_name" value="{{ $role->role_name }}">
+                <input type="text" name="role_name" class="form-control" placeholder="Role" value="{{ $role->role_name }}" >
+                <!-- <select class="form-control" name="role_name" value="{{ $role->role_name }}">
                     <option value="MSA" @if($role->role_name == 'MSA') selected @endif>Master Super Admin</option>
                     <option value="AC" @if($role->role_name == 'AC') selected @endif>Account</option>
                     <option value="Admin" @if($role->role_name == 'Admin') selected @endif>Administrator</option>
@@ -26,7 +26,7 @@
                     <option value="Site" @if($role->role_name == 'Site') selected @endif>Site</option>
                     <option value="SSA" @if($role->role_name == 'SSA') selected @endif>Super Super Admin</option>
                     <option value="VIEW" @if($role->role_name == 'VIEW') selected @endif>Viewing</option>
-                </select>
+                </select> -->
             </div>
         </div>
         <div class="form-group">

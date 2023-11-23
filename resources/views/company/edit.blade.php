@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col mb-3">
                 <label class="form-label">company</label>
-                <input type="text" name="company_name" class="form-control" placeholder="company" value="{{ $company->company_name }}" >
+                <input type="text" name="company_name" class="form-control" placeholder="company" value="{{ $company->company_name }}" required>
             </div>
         </div>
         <div class="form-group">

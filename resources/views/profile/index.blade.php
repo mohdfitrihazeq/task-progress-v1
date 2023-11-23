@@ -3,7 +3,7 @@
 @section('contents')
     <div class="d-flex align-items-center justify-content-between">
         <h1 class="mb-0">CRUD System Login User</h1>
-        <a href="{{ route('profile.create') }}" class="btn btn-primary">Add User</a>
+        <a href="{{ route('profile.create') }}" class="btn btn-primary">Create User</a>
     </div>
     <hr />
     @if(Session::has('success'))

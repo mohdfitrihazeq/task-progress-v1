@@ -9,7 +9,7 @@
         @csrf
         <div class="row mb-3">
             <div class="col">
-                <!-- <label class="form-label">Company</label> -->
+                <label class="form-label">Company</label>
                 <input type="text" name="company_name" class="form-control" placeholder="Company Name" required>
             </div>
             <!-- <div class="col">

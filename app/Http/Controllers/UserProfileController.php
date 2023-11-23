@@ -68,17 +68,18 @@ class UserProfileController extends Controller
 
         // Create a new user
         $user = new User([
-            'user_name' => $request->name,
+            'user_name' => $request->user_name,
             'name' => $request->name,
             'email' => $request->email,
             'role_name' => $request->role_name,
+            'company_id' => $request->company_id,
             'password' => Hash::make($request->password),
         ]);
 
         $company = Company::findOrFail($request->company_id);
-        $role = Role::findOrFail($request->role_name);
+        $role = Role::where('role_name', $request->role_name)->first();
         $user->company()->associate($company);
-        $user->role()->associate($role);
+        // $user->role()->associate($role);
 
         $user->save();
 

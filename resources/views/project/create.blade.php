@@ -9,6 +9,7 @@
         @csrf
         <div class="row mb-3">
             <div class="col">
+                <label class="form-label">Project</label>
                 <input type="text" name="project_name" class="form-control" placeholder="project" required>
             </div>
             <!-- <div class="col">

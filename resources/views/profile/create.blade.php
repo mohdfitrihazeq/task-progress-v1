@@ -9,18 +9,22 @@
         @csrf
         <div class="row mb-3">
             <div class="col-md-6">
+                <label class="form-label">User Name</label>
                 <input type="text" name="user_name" class="form-control" placeholder="User Name" required>
             </div>
             <div class="col-md-6">
+                <label class="form-label">Name</label>
                 <input type="text" name="name" class="form-control" placeholder="Name" required>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
+                <label class="form-label">Email</label>
                 <input type="text" name="email" class="form-control" placeholder="Email" required>
             </div>
             <div class="col-md-6">
                 <!-- <input type="text" name="role_name" class="form-control" placeholder="Role" required> -->
+                <label class="form-label">Role</label>
                 <select class="form-control" name="role_name" placeholder="Role">
                     @foreach ($roles as $role)
                         <option value="{{ $role->role_name }}">{{ $role->role_name }}</option>
@@ -30,15 +34,17 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
-                <input name="password" type="password" class="form-control form-control-user @error('password')is-invalid @enderror" id="exampleInputPassword" placeholder="Password" required>
+                <label class="form-label">Password</label>
+                <input name="password" type="password" class="form-control form-control-user @error('password')is-invalid @enderror" id="exampleInputPassword" placeholder="Password" value="tmS@1234">
                 @error('password')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
             <div class="col-md-6">
-                <select class="form-control" name="company_id" placeholder="Company" required>
+                <label class="form-label">Company</label>
+                <select class="form-control" name="company_id" placeholder="Company">
                     @foreach ($companies as $company)
-                        <option value="{{ $company->id }}">{{ $company->company_name }}</option>
+                        <option value="{{ $company->company_id }}">{{ $company->company_name }}</option>
                     @endforeach
                 </select>
             </div>
