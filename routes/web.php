@@ -12,6 +12,11 @@ Route::get('/', function () {
 });
  
 Route::controller(AuthController::class)->group(function () {
+
+    Route::get('firstlogin', 'showLoginForm');
+    Route::get('firstlogin/{user}', 'showFirstLoginForm')->name('firstlogin');
+    Route::post('firstlogin/changepassword', 'changePassword')->name('changepassword');
+    
     Route::get('register', 'register')->name('register');
     Route::post('register', 'registerSave')->name('register.save');
   

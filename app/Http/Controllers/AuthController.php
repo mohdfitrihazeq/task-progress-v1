@@ -14,6 +14,60 @@ use Illuminate\Validation\Rule;
   
 class AuthController extends Controller
 {
+    public function showFirstLoginForm(Request $request){
+		if (!$request->route('user')) {
+            // ID parameter is missing; redirect to another URL
+            return redirect('login');
+        }
+		else{
+			$user = $request->route('user'); // Retrieve the 'user' parameter from the route
+			$exists = User::where('user_name', $user)->whereNull('password_changed_at')->exists(); 
+			if ($exists) {
+				// Record exists
+				return view('auth.firstlogin', ['user' => $user]);
+			} else {
+				// Record does not exist
+				return redirect()->route('login');
+			}
+		}
+	}
+	
+	public function changePassword(Request $request){
+		$user = $request->input('user_name'); // Retrieve the 'user' parameter from the route
+        // Access form input
+        $validator = Validator::make($request->all(), [
+            'user_name' => ['required'
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:6',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+            ],
+        ]);
+        if ($validator->fails()) {
+            return redirect('firstlogin/'.$request->input('user_name'))
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $input = [
+            'password' => bcrypt($request->input('password')),
+            'password_changed_at' => \Carbon\Carbon::now()
+        ];
+
+        User::where('user_name', $user)->update($input);
+        
+        if (!Auth::attempt($request->only('user_name', 'password'))) {
+            throw ValidationException::withMessages([
+                'user_name' => trans('auth.failed')
+            ]);
+        }
+  
+        $request->session()->regenerate();
+  
+        return redirect()->route('dashboard');
+	}
+    
     public function register()
     {
         return view('auth/register');
@@ -70,19 +124,23 @@ class AuthController extends Controller
     public function loginAction(Request $request)
     {
         Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
+            'user_name' => 'required',
         ])->validate();
-  
-        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed')
-            ]);
+
+        if(User::where('user_name', '=', $request->input('user_name'))->whereNull('password_changed_at')->exists()){
+            return redirect()->route('firstlogin',['user'=>$request->input('user_name')]);
         }
-  
-        $request->session()->regenerate();
-  
-        return redirect()->route('dashboard');
+        else{
+            if (!Auth::attempt($request->only('user_name', 'password'))) {
+                throw ValidationException::withMessages([
+                    'user_name' => trans('auth.failed')
+                ]);
+            }
+
+            $request->session()->regenerate();
+      
+            return redirect()->route('dashboard');
+        }
     }
   
     public function logout(Request $request)

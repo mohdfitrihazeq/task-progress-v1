@@ -1,3 +1,4 @@
+<script src="{{asset('admin_assets/js/firstlogin.js')}}"></script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +31,7 @@
               <div class="text-center">
                 <h1 class="h4 text-white mb-4">System Login</h1>
               </div>
-              <form action="{{ route('login.action') }}" method="POST" class="user">
+              <form action="{{ route('changepassword') }}" method="POST" class="user">
                 @csrf
                 @if ($errors->any())
                   <div class="alert alert-danger">
@@ -41,28 +42,60 @@
                       </ul>
                   </div>
                 @endif
-                <div class="row justify-content-center">
+                <div class="row pb-4 justify-content-center">
                   <div class="col-lg-3">
                     <div class="text-white">
                         User Login Name: 
                     </div>
                   </div>
                   <div class="col-lg-6">
-                    <div class="form-group">
-                      <input name="user_name" type="text" class="form-control" id="exampleInputUsername">
+                    <div class="text-white align-middle">
+                      <input name="user_name" hidden value="{{$user}}" id="exampleInputUsername">{{$user}}
                     </div>
                   </div>
                 </div>
                 <div class="row justify-content-center">
                   <div class="col-lg-3">
                     <div class="text-white">
-                      Password: 
+                      New Password: 
                     </div>
                   </div>
                   <div class="col-lg-6">
                     <div class="form-group">
                       <input name="password" type="password" class="form-control" id="exampleInputPassword">
                     </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-lg-3">
+                    <div class="text-white">
+                      Confirm Password: 
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <input name="password_confirmation" type="password" class="form-control" id="exampleInputConfirmPassword">
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-lg-3">
+                    <div class="text-right text-white form-group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16" id="show_password" name="show_password" onclick="showPassword() ">
+                            <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                        </svg>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="text-left text-white">
+                      Show Password 
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center pb-3">
+                  <div class="text-white col-lg-8">
+                    The password should at least be a mix of a lower case ( e.g. a, d), upper case 
+                    character (e.g. B, F),  number (e.g. 2, 3) and symbol (e.g. &, @)
                   </div>
                 </div>
                 <div class="row justify-content-center">
