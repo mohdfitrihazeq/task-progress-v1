@@ -35,14 +35,20 @@ class UserProfileController extends Controller
             'required',
             'email',
             Rule::unique('users'), // Check uniqueness in the 'users' table
+            function ($attribute, $value, $fail) {
+                // Check if the email contains '@' and '.'
+                if (strpos($value, '@') === false || strpos($value, '.') === false) {
+                    $fail('Error '.$attribute.'. Please ensure it has "@" or "." !');
+                }
+            },
         ],
         'password' => 'required',
     ]);
 
         // Add custom error message for duplicate email
-        $validator->sometimes('email', 'unique:users', function ($input) {
-            return !User::where('email', $input['email'])->exists();
-        });
+        // $validator->sometimes('email', 'unique:users', function ($input) {
+        //     return !User::where('email', $input['email'])->exists();
+        // });
 
         $validator->sometimes('name', 'unique:users', function ($input) {
             return !User::where('name', $input['name'])->exists();
@@ -90,15 +96,18 @@ class UserProfileController extends Controller
     public function show(string $id)
     {
         $profile = User::findOrFail($id);
-        return view('profile.show', compact('profile'));
+        $company = Company::all();
+        $roles = Role::all();
+        return view('profile.show', compact('profile','company','roles'));
     }
 
     public function edit(string $id)
     {
         $profile = User::findOrFail($id);
         $roles = Role::all();  // Retrieve all roles or adjust as needed
+        $companies = Company::all();  // Retrieve all roles or adjust as needed
 
-        return view('profile.edit', compact('profile', 'roles'));
+        return view('profile.edit', compact('profile', 'roles','companies'));
     }
 
     public function update(Request $request, string $id)
