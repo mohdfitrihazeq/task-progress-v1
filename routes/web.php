@@ -80,6 +80,8 @@ Route::middleware('auth')->group(function () {
         Route::get('show/{id}', [UserProfileController::class, 'show'])->name('profile.show');
         Route::get('edit/{id}', [UserProfileController::class, 'edit'])->name('profile.edit');
         Route::put('edit/{id}', [UserProfileController::class, 'update'])->name('profile.update');
+        Route::get('editpassword/{user}', [UserProfileController::class, 'editPassword'])->name('profile.editpassword');
+        Route::put('edit/{id}', [UserProfileController::class, 'updatePassword'])->name('profile.updatepassword');
         Route::delete('destroy/{id}', [UserProfileController::class, 'destroy'])->name('profile.destroy');
     });
     // Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');

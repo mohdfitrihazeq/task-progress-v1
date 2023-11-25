@@ -1,9 +1,9 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
   
   <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard">
     <div class="sidebar-brand-icon rotate-n-15">
-      <i class="fas fa-laugh-wink"></i>
+      <i class="fas fa-home"></i>
     </div>
     <div class="sidebar-brand-text mx-3">Task Progress</div>
   </a>
@@ -45,7 +45,7 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link" href="">
+    <a class="nav-link" href="{{ route('profile.editpassword', auth()->user()->id ) }}">
       <i class="fas fa-fw fa-folder"></i>
       <span>Change Password</span></a>
   </li>
