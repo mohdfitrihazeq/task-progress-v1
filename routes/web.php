@@ -12,6 +12,11 @@ Route::get('/', function () {
 });
  
 Route::controller(AuthController::class)->group(function () {
+
+    Route::get('firstlogin', 'showLoginForm');
+    Route::get('firstlogin/{user}', 'showFirstLoginForm')->name('firstlogin');
+    Route::post('firstlogin/changepassword', 'changePassword')->name('changepassword');
+    
     Route::get('register', 'register')->name('register');
     Route::post('register', 'registerSave')->name('register.save');
   
@@ -75,6 +80,8 @@ Route::middleware('auth')->group(function () {
         Route::get('show/{id}', [UserProfileController::class, 'show'])->name('profile.show');
         Route::get('edit/{id}', [UserProfileController::class, 'edit'])->name('profile.edit');
         Route::put('edit/{id}', [UserProfileController::class, 'update'])->name('profile.update');
+        Route::get('editpassword/{user}', [UserProfileController::class, 'editPassword'])->name('profile.editpassword');
+        Route::put('edit/{id}', [UserProfileController::class, 'updatePassword'])->name('profile.updatepassword');
         Route::delete('destroy/{id}', [UserProfileController::class, 'destroy'])->name('profile.destroy');
     });
     // Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');

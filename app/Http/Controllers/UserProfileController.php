@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Company;
+use App\Mail\FirstLoginMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
@@ -71,7 +73,14 @@ class UserProfileController extends Controller
         // ]);
 
         // User::create($request->all());
+		$userEmail = $request->email;
+        $userName = $request->name;
 
+        $emailData = [
+            'user_name' => $request->user_name,
+            'name' => $request->name,
+        ];
+        Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
         // Create a new user
         $user = new User([
             'user_name' => $request->user_name,
@@ -81,12 +90,10 @@ class UserProfileController extends Controller
             'company_id' => $request->company_id,
             'password' => Hash::make($request->password),
         ]);
-
-        $company = Company::findOrFail($request->company_id);
+        $company = Company::where('id', $request->company_id)->firstOrFail();
         $role = Role::where('role_name', $request->role_name)->first();
-        $user->company()->associate($company);
+        //$user->company()->associate($company);
         // $user->role()->associate($role);
-
         $user->save();
 
 
@@ -116,6 +123,42 @@ class UserProfileController extends Controller
         $profile->update($request->all());
         return redirect()->route('profile')->with('success', 'Profile updated successfully');
     }
+
+    public function editPassword(string $id)
+    {
+        $profile = User::findOrFail($id);
+        $roles = Role::all();  // Retrieve all roles or adjust as needed
+
+        return view('profile.editpassword', compact('profile', 'roles'));
+    }
+
+	public function updatePassword(Request $request, string $user){
+        $profile = User::findOrFail($user);
+        // Access form input
+        $validator = Validator::make($request->all(), [
+            'password' => [
+                'required',
+                'confirmed',
+                'min:6',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+            ],
+        ]);
+        if ($validator->fails()) {
+            return redirect('profile/editpassword/'.$user)
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $input = [
+            'password' => bcrypt($request->input('password')),
+            'password_changed_at' => \Carbon\Carbon::now()
+        ];
+
+        $profile->update($input);
+  
+        $request->session()->regenerate();
+  
+        return redirect()->route('dashboard')->with('success', 'Password updated successfully');
+	}
 
     public function destroy(string $id)
     {

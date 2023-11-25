@@ -50,6 +50,12 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                
+                    @if(Session::has('success'))
+                        <div class="alert alert-success" project="alert">
+                            {{ Session::get('success') }}
+                        </div>
+                    @endif
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
