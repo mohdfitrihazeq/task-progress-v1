@@ -71,6 +71,7 @@ class UserProfileController extends Controller
         $userName = $request->name;
 
         $emailData = [
+            'user_name' => $request->user_name,
             'name' => $request->name,
         ];
         Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
@@ -134,7 +135,7 @@ class UserProfileController extends Controller
             ],
         ]);
         if ($validator->fails()) {
-            return redirect('dashboard/'.$request->input('password'))
+            return redirect('profile/editpassword/'.$user)
                         ->withErrors($validator)
                         ->withInput();
         }
