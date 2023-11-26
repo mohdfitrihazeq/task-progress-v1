@@ -25,6 +25,7 @@
     </a>
   </li>
   
+  @if(Auth::user()->role_name == 'Master Super Admin - MSA' || Auth::user()->role_name == 'Super Super Admin - SSA')
   <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
           aria-expanded="true" aria-controls="collapseTwo">
@@ -37,13 +38,13 @@
             @if(Auth::user()->role_name == 'Master Super Admin - MSA')
               <a class="collapse-item" href="{{ route('roles') }}">CRUD Role</a>
               <a class="collapse-item" href="{{ route('company') }}">CRUD Company</a>
-              <a class="collapse-item" href="{{ route('profile') }}">CRUD System Login User</a>
             @endif
               <a class="collapse-item" href="{{ route('project') }}">CRUD Project</a>
+              <a class="collapse-item" href="{{ route('profile') }}">CRUD System Login User</a>
           </div>
       </div>
   </li>
-
+  @endif
   <li class="nav-item">
     <a class="nav-link" href="{{ route('profile.editpassword', auth()->user()->id ) }}">
       <i class="fas fa-fw fa-folder"></i>

@@ -7,23 +7,37 @@
     <hr />
     <form action="{{ route('project.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @if(Auth::user()->role_name == 'Master Super Admin - MSA')
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label">Company</label>
+                    <select class="form-control" name="company_id">
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->company_id }}">{{ $company->company_name }}</option>
+                        @endforeach
+                    </select>
+                    <!-- Hidden input outside of the select element -->
+                    <!-- <input type="hidden" name="hidden_company_id" id="hidden_company_id" value=""> -->
+                </div>
+                <div class="col">
+                    <label class="form-label">Project</label>
+                    <input type="text" name="project_name" class="form-control" placeholder="project" required>
+                </div>
+            </div>
+        @else
         <div class="row mb-3">
             <div class="col">
+                <!-- Hidden input outside of the select element -->
+                @if($companies->isNotEmpty())
+                    <input type="hidden" name="company_id" value="{{ $companies->first()->company_name }}">
+                @else     
+                    <input type="hidden" name="" value="">
+                @endif
                 <label class="form-label">Project</label>
                 <input type="text" name="project_name" class="form-control" placeholder="project" required>
             </div>
-            <!-- <div class="col">
-                <input type="text" name="price" class="form-control" placeholder="Price">
-            </div> -->
         </div>
-        <!-- <div class="row mb-3">
-            <div class="col">
-                <input type="text" name="product_code" class="form-control" placeholder="Product Code">
-            </div>
-            <div class="col">
-                <textarea class="form-control" name="description" placeholder="Descriptoin"></textarea>
-            </div>
-        </div> -->
+        @endif
         @if($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -40,4 +54,13 @@
             </div>
         </div>
     </form>
+
+<script>
+    function logFormData() {
+        var form = document.forms[0];
+        var formData = new FormData(form);
+        console.log([...formData.entries()]);
+    }
+</script>
+
 @endsection
