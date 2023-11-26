@@ -90,7 +90,7 @@ class UserProfileController extends Controller
             'company_id' => $request->company_id,
             'password' => Hash::make($request->password),
         ]);
-        $company = Company::where('id', $request->company_id)->firstOrFail();
+        $company = Company::where('company_id', $request->company_id)->firstOrFail();
         $role = Role::where('role_name', $request->role_name)->first();
         //$user->company()->associate($company);
         // $user->role()->associate($role);

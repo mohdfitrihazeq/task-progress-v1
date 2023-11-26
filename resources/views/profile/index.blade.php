@@ -16,7 +16,7 @@
             <tr>
                 <th>#</th>
                 <th>User Login Name</th>
-                <th>Name</th>
+                <th>Employee Name</th>
                 <th>Email</th>
                 <th>Role</th>
                 <th>Action</th>

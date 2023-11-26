@@ -13,4 +13,11 @@ class Company extends Model
         'company_name'
     ];
     protected $primaryKey = 'company_id';
+
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_company', 'company_id', 'project_id')->withTimestamps();
+    }
+
 }

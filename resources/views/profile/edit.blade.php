@@ -6,7 +6,7 @@
     <!-- <h1 class="mb-0">Edit profile</h1> -->
     
     <hr />
-    <form action="{{ route('profile.update', $profile->id) }}" method="POST">
+    <form action="{{ route('profile.edit', $profile->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="row">
