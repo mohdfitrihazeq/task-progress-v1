@@ -36,7 +36,7 @@ class UserProfileController extends Controller
         'email' => [
             'required',
             'email',
-            Rule::unique('users'), // Check uniqueness in the 'users' table
+            // Rule::unique('users'), // Check uniqueness in the 'users' table
             function ($attribute, $value, $fail) {
                 // Check if the email contains '@' and '.'
                 if (strpos($value, '@') === false || strpos($value, '.') === false) {
