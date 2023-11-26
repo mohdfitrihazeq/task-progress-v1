@@ -29,7 +29,7 @@
             <div class="col">
                 <!-- Hidden input outside of the select element -->
                 @if($companies->isNotEmpty())
-                    <input type="hidden" name="company_id" value="{{ $companies->first()->company_id }}">
+                    <input type="hidden" name="company_id" value="{{ $companies->first()->company_name }}">
                 @else     
                     <input type="hidden" name="" value="">
                 @endif

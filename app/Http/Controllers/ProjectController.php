@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Company;
 use App\Models\ProjectCompany;
+use App\Models\AuthController;
  
 class ProjectController extends Controller
 {
@@ -39,10 +40,8 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
             'project_name' => ['required', Rule::unique('projects', 'project_name')],
-            // 'company_id' => ['required', Rule::exists('companies', 'id')],
         ]);
 
         // Check if validation fails
@@ -55,16 +54,21 @@ class ProjectController extends Controller
             'project_name' => $request->input('project_name'),
         ]);
 
-        $company = Company::create([
-            'company_name' => $request->input('company_name'),
-        ]);
-        // $company = Company::findOrFail($request->company_id);
+        // Check if the user is Master Super Admin - MSA
+        if (\Auth::user()->role_name == 'Master Super Admin - MSA') {
+            // Validate and create the company only if MSA
+            if ($request->has('company_id')) {
+                $company = Company::find($request->input('company_id'));
 
-        // Attach the project to the specified company
-        $project->companies()->attach($company);
+                // Attach the project to the specified company
+                $project->companies()->attach($company);
+            }
+        }
 
         return redirect()->route('project')->with('success', 'Project added successfully');
     }
+
+
 
 
   
