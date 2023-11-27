@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\ProjectTaskProgressController;
  
 Route::get('/', function () {
     return redirect()->route('login'); // Redirect to the login route
@@ -41,6 +42,18 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', 'edit')->name('roles.edit');
         Route::put('edit/{id}', 'update')->name('roles.update');
         Route::delete('destroy/{id}', 'destroy')->name('roles.destroy');
+    });
+ 
+    Route::controller(ProjectTaskProgressController::class)->prefix('projecttaskprogress')->group(function () {
+        Route::get('createnewprojecttaskname','createnewprojecttaskname')->name('projecttaskprogress.createnewprojecttaskname');
+        Route::get('','createupdateprojecttask')->name('projecttaskprogress.createupdateprojecttask');
+        Route::get('completedprojecttask','completedprojecttask')->name('projecttaskprogress.completedprojecttask');
+        Route::get('create','create')->name('projecttaskprogress.create');
+        Route::post('store','store')->name('projecttaskprogress.store');
+        Route::get('show/{id}','show')->name('projecttaskprogress.show');
+        Route::get('edit/{id}','edit')->name('projecttaskprogress.edit');
+        Route::put('edit/{id}','update')->name('projecttaskprogress.update');
+        Route::delete('destroy/{id}','destroy')->name('projecttaskprogress.destroy');
     });
 
     Route::controller(ProjectController::class)->prefix('project')->group(function () {
@@ -81,7 +94,7 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', [UserProfileController::class, 'edit'])->name('profile.edit');
         Route::put('edit/{id}', [UserProfileController::class, 'update'])->name('profile.update');
         Route::get('editpassword/{user}', [UserProfileController::class, 'editPassword'])->name('profile.editpassword');
-        Route::put('edit/{id}', [UserProfileController::class, 'updatePassword'])->name('profile.updatepassword');
+        Route::put('editpassword/{id}', [UserProfileController::class, 'updatePassword'])->name('profile.updatepassword');
         Route::delete('destroy/{id}', [UserProfileController::class, 'destroy'])->name('profile.destroy');
     });
     // Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');

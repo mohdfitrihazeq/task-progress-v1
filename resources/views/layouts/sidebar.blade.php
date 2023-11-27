@@ -19,7 +19,7 @@
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" href="">
+    <a class="nav-link" href="{{ route('projecttaskprogress.createupdateprojecttask') }}">
       <i class="fas fa-fw fa-wrench"></i>
       <span>Task Planning</span>
     </a>
