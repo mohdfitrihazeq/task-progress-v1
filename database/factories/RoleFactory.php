@@ -19,8 +19,6 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => 1,
-            'role_name' => "Master Super Admin - MSA",
         ];
     }
 }

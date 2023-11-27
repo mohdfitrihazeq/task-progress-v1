@@ -88,7 +88,6 @@
         <div class="row">
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Import From Excel</button>
-                <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-secondary">Back</a>
             </div>
         </div>
     </form>
@@ -102,7 +101,7 @@
                     <th>Task Owner</th>
                 </tr>
             </thead>
-            <tbody>+
+            <tbody>
                 @if($projecttaskprogress->count() > 0)
                     @foreach($projecttaskprogress as $rs)
                         <tr>

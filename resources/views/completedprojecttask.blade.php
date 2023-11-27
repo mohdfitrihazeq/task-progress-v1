@@ -35,7 +35,7 @@
                     <th hidden="hidden">Project</th>
                 </tr>
             </thead>
-            <tbody>+
+            <tbody>
                 @if($projecttaskprogress->count() > 0)
                     @foreach($projecttaskprogress as $rs)
                         <tr>

@@ -15,13 +15,20 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         \App\Models\Company::factory()->create([
-            'company_name' => 'default',
+            'id' => 1,
+            'company_name' => 'XYZ',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
         \App\Models\Role::factory()->create([
             'role_name' => 'Master Super Admin - MSA',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        \App\Models\Project::factory()->create([
+            'project_name' => 'BestVilla',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

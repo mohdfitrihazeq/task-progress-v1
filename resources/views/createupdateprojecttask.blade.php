@@ -36,7 +36,7 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>+
+            <tbody>
                 @if($projecttaskprogress->count() > 0)
                     @foreach($projecttaskprogress as $rs)
                         <tr>
@@ -64,6 +64,11 @@
 
 <script>    
     $(document).ready(function () {
+        $("#select_all").on('click', function() {
+            var nodesObj = $('#dataTables').DataTable().columns( [ 0, 6 ] ).nodes().to$();
+            var nodesArray = nodesObj[0].concat( nodesObj[1] );
+            $(nodesArray).find('input[type="checkbox"]:enabled:visible').prop('checked', 'true');
+        });
         $('#data-table').DataTable({
             dom: 'Bfrtip', // Add the export buttons to the DOM
             buttons: [
