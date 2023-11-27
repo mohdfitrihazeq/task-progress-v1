@@ -75,11 +75,25 @@ class CompanyController extends Controller
     public function update(Request $request, string $company_id)
     {
         $company = Company::findOrFail($company_id);
-  
+
+        // Validate the incoming request data
+        $validator = Validator::make($request->all(), [
+            'company_name' => [
+                'required',
+                Rule::unique('companies', 'company_name')->ignore($company->company_id, 'company_id'),
+            ],
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $company->update($request->all());
-  
-        return redirect()->route('company')->with('success', 'company updated successfully');
+
+        return redirect()->route('company')->with('success', 'Company updated successfully');
     }
+
   
     /**
      * Remove the specified resource from storage.

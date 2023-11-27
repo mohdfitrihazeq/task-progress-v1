@@ -34,7 +34,7 @@ class RoleController extends Controller
     {
 
          // Validate the request data
-         $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'role_name' => ['required', Rule::unique('roles', 'role_name')],
         ]);
 
@@ -63,6 +63,7 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
+        
         $role = Role::findOrFail($id);
   
         return view('role.edit', compact('role'));
@@ -74,11 +75,27 @@ class RoleController extends Controller
     public function update(Request $request, string $id)
     {
         $role = Role::findOrFail($id);
-  
+
+        // Validate the incoming request data
+        $validator = Validator::make($request->all(), [
+            'role_name' => [
+                'required',
+                Rule::unique('roles', 'role_name')->ignore($role->id),
+            ],
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Update the role with the new data
         $role->update($request->all());
-  
-        return redirect()->route('roles')->with('success', 'role updated successfully');
+
+        // Redirect to the roles index with a success message
+        return redirect()->route('roles')->with('success', 'Role updated successfully');
     }
+
   
     /**
      * Remove the specified resource from storage.
