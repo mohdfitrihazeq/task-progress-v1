@@ -27,27 +27,33 @@
                 <label class="form-label">Role</label>
                 <select class="form-control" name="role_name" placeholder="Role">
                     @foreach ($roles as $role)
-                        <option value="{{ $role->role_name }}">{{ $role->role_name }}</option>
+                        @if(Auth::user()->role_name == 'Master Super Admin - MSA' || $role->role_name != 'Master Super Admin - MSA')
+                            <option value="{{ $role->role_name }}">{{ $role->role_name }}</option>
+                        @endif
                     @endforeach
                 </select>
+
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">Password</label>
-                <input name="password" type="password" class="form-control form-control-user @error('password')is-invalid @enderror" id="exampleInputPassword" placeholder="Password" value="tmS@1234">
+                <input name="password" type="password" id="passwordInput" class="form-control form-control-user @error('password')is-invalid @enderror" id="exampleInputPassword" placeholder="Password" value="tmS@1234">
+                <input type="checkbox" onclick="togglePassword()"> Show Password
                 @error('password')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Company</label>
-                <select class="form-control" name="company_id" placeholder="Company">
-                    @foreach ($companies as $company)
-                        <option value="{{ $company->company_id }}">{{ $company->company_name }}</option>
-                    @endforeach
-                </select>
-            </div>
+            @if(Auth::user()->role_name == 'Master Super Admin - MSA')
+                <div class="col-md-6">
+                    <label class="form-label">Company</label>
+                    <select class="form-control" name="company_id" placeholder="Company">
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->company_id }}">{{ $company->company_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
         </div>
         @if($errors->any())
             <div class="alert alert-danger">
@@ -65,6 +71,17 @@
             </div>
         </div>
     </form>
+
+<script>
+    function togglePassword() {
+        var passwordInput = document.getElementById('passwordInput');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+        } else {
+            passwordInput.type = 'password';
+        }
+    }
+</script>
 @endsection
 
  <!-- <div class="col">

@@ -44,7 +44,8 @@
                       <input name="user_name" type="user_name" class="form-control form-control-user" id="exampleInputUsername" placeholder="Username">
                     </div>
                     <div class="form-group">
-                      <input name="password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                      <input name="password" type="password" id="passwordInput" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                      <input type="checkbox" onclick="togglePassword()"> Show Password
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
                   </form>
@@ -64,5 +65,15 @@
   <script src="{{ asset('admin_assets/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
   <!-- Custom scripts for all pages-->
   <script src="{{ asset('admin_assets/js/sb-admin-2.min.js') }}"></script>
+  <script>
+    function togglePassword() {
+        var passwordInput = document.getElementById('passwordInput');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+        } else {
+            passwordInput.type = 'password';
+        }
+    }
+  </script>
 </body>
 </html>

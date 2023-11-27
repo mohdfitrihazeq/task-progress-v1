@@ -63,6 +63,12 @@ class ProjectController extends Controller
                 // Attach the project to the specified company
                 $project->companies()->attach($company);
             }
+        }else{
+            // Use \Auth::user()->company_id for company_id
+            $company = Company::find(\Auth::user()->company_id);
+
+            // Attach the project to the specified company
+            $project->companies()->attach($company);
         }
 
         return redirect()->route('project')->with('success', 'Project added successfully');
@@ -78,8 +84,13 @@ class ProjectController extends Controller
     public function show(string $id)
     {
         $project = Project::findOrFail($id);
+         // Get the companies associated with the project
+         $associatedCompanies = $project->companies;
+
+         // Get all companies
+         $companies = Company::all(); 
   
-        return view('project.show', compact('project'));
+        return view('project.show', compact('project','companies', 'associatedCompanies'));
     }
   
     /**

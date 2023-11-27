@@ -80,21 +80,36 @@ class UserProfileController extends Controller
             'user_name' => $request->user_name,
             'name' => $request->name,
         ];
-        Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
+        // Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
         // Create a new user
-        $user = new User([
-            'user_name' => $request->user_name,
-            'name' => $request->name,
-            'email' => $request->email,
-            'role_name' => $request->role_name,
-            'company_id' => $request->company_id,
-            'password' => Hash::make($request->password),
-        ]);
-        $company = Company::where('company_id', $request->company_id)->firstOrFail();
-        $role = Role::where('role_name', $request->role_name)->first();
-        //$user->company()->associate($company);
-        // $user->role()->associate($role);
-        $user->save();
+        if (\Auth::user()->role_name == 'Master Super Admin - MSA') {
+            $user = new User([
+                'user_name' => $request->user_name,
+                'name' => $request->name,
+                'email' => $request->email,
+                'role_name' => $request->role_name,
+                'company_id' => $request->company_id,
+                'password' => Hash::make($request->password),
+            ]);
+            $company = Company::where('company_id', $request->company_id)->firstOrFail();
+            $role = Role::where('role_name', $request->role_name)->first();
+            //$user->company()->associate($company);
+            // $user->role()->associate($role);
+            $user->save();
+        }else{
+            $user = new User([
+                'user_name' => $request->user_name,
+                'name' => $request->name,
+                'email' => $request->email,
+                'role_name' => $request->role_name,
+                'password' => Hash::make($request->password),
+                'company_id' => \Auth::user()->company_id,
+            ]);
+            $role = Role::where('role_name', $request->role_name)->first();
+            //$user->company()->associate($company);
+            // $user->role()->associate($role);
+            $user->save();
+        }
 
 
         return redirect()->route('profile')->with('success', 'User added successfully');
@@ -120,9 +135,44 @@ class UserProfileController extends Controller
     public function update(Request $request, string $id)
     {
         $profile = User::findOrFail($id);
-        $profile->update($request->all());
+    
+        // Access form input
+        $validator = Validator::make($request->all(), [
+            'new_password' => [
+                'nullable', // Allow null values
+                'min:6',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+            ],
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+    
+        // Check if new password is provided
+        if ($request->filled('new_password')) {
+            $input = array_merge(
+                $request->except('new_password', '_token', '_method'),
+                [
+                    'password' => bcrypt($request->input('new_password')),
+                    'password_changed_at' => now(),
+                ]
+            );
+        } else {
+            // If new password is not provided, retain the old password
+            $input = array_merge(
+                $request->except('new_password', '_token', '_method'),
+                ['password_changed_at' => now()]
+            );
+        }
+    
+        $profile->update($input);
+    
         return redirect()->route('profile')->with('success', 'Profile updated successfully');
     }
+    
 
     public function editPassword(string $id)
     {
