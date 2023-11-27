@@ -21,7 +21,8 @@ return new class extends Migration
             $table->date('task_actual_start_date');
             $table->date('task_actual_end_date');
             $table->integer('task_progress_percentage');
-            $table->integer('user_login_name');
+            $table->foreignId('user_login_name')->nullable();
+            $table->foreign('user_login_name')->references('id')->on('users')->onDelete('cascade');
         });
         Schema::create('project_task_progress_log', function (Blueprint $table) {
             $table->id();
@@ -33,7 +34,7 @@ return new class extends Migration
             $table->date('task_actual_start_date');
             $table->date('task_actual_end_date');
             $table->integer('task_progress_percentage');
-            $table->foreignId('user_login_name');
+            $table->foreignId('user_login_name')->nullable();
             $table->foreign('user_login_name')->references('id')->on('users')->onDelete('cascade');
         });
     }

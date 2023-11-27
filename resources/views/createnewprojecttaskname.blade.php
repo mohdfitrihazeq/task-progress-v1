@@ -17,10 +17,19 @@
             @endforeach
         </select>
     </div>
-    <hr />
+    <hr>
     @if(Session::has('success'))
         <div class="alert alert-success" role="alert">
             {{ Session::get('success') }}
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
     <form class="pb-5" action="{{ route('projecttaskprogress.store') }}" method="POST" enctype="multipart/form-data">
@@ -47,15 +56,6 @@
                 </Select>
             </div>
         </div>
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <div class="row">
             <div class="d-grid">
                 <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-secondary">Clear</a>
@@ -63,28 +63,27 @@
             </div>
         </div>
     </form>
-    <form class="pb-5" action="{{ route('projecttaskprogress.store') }}" method="POST" enctype="multipart/form-data">
+    <hr class="my-4 dotted border-5">
+        <div class="row mb-3">
+            <div class="col">
+                Add a Batch of New Project Tasks via the Excel Import
+            </div>
+        </div>
+    <form class="pb-5" action="{{ route('projecttaskprogress.importfromexcel') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <input value="{{$project['0']['id']}}" hidden id="importfromexcelprojectid" name="importfromexcelprojectid">
+        <input hidden name="user" value="{{auth()->user()->id}}">
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Project Name: </label>
-                <select id="projectFilter" name="projectFilter" class="form-control" aria-label="Project Filter">
-                    @foreach($project as $rs)
-                            <option value="{{ $rs->id }}">{{ $rs->project_name }}</option>
-                    @endforeach
-                </select>
-                <input class="p-3" type="file" name="file">
+            </div>
+            <div class="col" id="importfromexcelprojectname" name="importfromexcelprojectname">
+                {{$project['0']['project_name']}}
+            </div>
+            <div class="col">
+                <input type="file" name="file">
             </div>
         </div>
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <div class="row">
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Import From Excel</button>
@@ -102,13 +101,13 @@
                 </tr>
             </thead>
             <tbody>
-                @if($projecttaskprogress->count() > 0)
-                    @foreach($projecttaskprogress as $rs)
+                @if(Session::has('data'))
+                    @foreach(Session::get('data') as $rs)
                         <tr>
                             <td class="align-middle"></td>
-                            <td class="align-middle">{{ $rs->task_sequence_no_wbs }}</td>
-                            <td class="align-middle">{{ $rs->task_name }}</td>
-                            <td class="align-middle">{{ $rs->name }}</td>
+                            <td class="align-middle">{{ $rs }}</td>
+                            <td class="align-middle">{{ $rs }}</td>
+                            <td class="align-middle">{{ $rs }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -127,6 +126,13 @@
     </form>
 <script>    
     $(document).ready(function () {
+        $('#projectFilter').on('change', function() {
+            var selectedProject = $(this).val();
+            var selectElement = document.getElementById('projectFilter');
+            var selectedValue = selectElement.options[selectElement.selectedIndex].innerHTML;
+            document.getElementById("importfromexcelprojectid").value=selectedProject;
+            document.getElementById("importfromexcelprojectname").innerHTML=selectedValue;
+        });
         $('#data-table').DataTable({
             dom: 'Bfrtip', // Add the export buttons to the DOM
             buttons: [

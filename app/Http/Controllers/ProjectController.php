@@ -18,7 +18,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $project = Project::with('companies.id')->orderBy('created_at', 'DESC')->get();
+        $project = Project::with('companies')->orderBy('created_at', 'DESC')->get();
         $companies = Company::orderBy('created_at', 'DESC')->get();
         $project_company = ProjectCompany::orderBy('created_at', 'DESC')->get();
 

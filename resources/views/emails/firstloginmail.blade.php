@@ -1,3 +1,4 @@
+GNU nano 5.8                                                 firstloginmail.blade.php                                                           
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +6,9 @@
 </head>
 <body>
     <h1>Hello, {{ $data['name'] }}!</h1>
-    <p>Your user has been created. Please proceed to http://127.0.0.1:8000/firstlogin/{{ $data['user_name'] }} to reset your password.</p>
+    <p>Your Task Progress user account has been created successfully . 
+Please click on <a href="https://qubit-apps.com/firstlogin/{{ $data['user_name'] }}">here</a> to reset your password to a new password.  
+Please do not reply to this auto generated email !
+</p>
 </body>
 </html>

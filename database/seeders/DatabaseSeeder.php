@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         \App\Models\Company::factory()->create([
-            'id' => 1,
+            'company_id' => 1,
             'company_name' => 'XYZ',
             'created_at' => now(),
             'updated_at' => now(),
@@ -29,6 +29,13 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Project::factory()->create([
             'project_name' => 'BestVilla',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        \App\Models\ProjectCompany::factory()->create([
+            'company_id' => 1,
+            'project_id' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

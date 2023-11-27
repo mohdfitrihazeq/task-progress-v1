@@ -16,6 +16,7 @@ class ProjectTaskProgress extends Model
         'task_actual_end_date',
         'task_progress_percentage',
         'last_update_bywhom',
+        'user_login_name',
     ];
-    protected $primaryKey = 'projecttaskprogress_id';
+    public $timestamps = false;
 }
