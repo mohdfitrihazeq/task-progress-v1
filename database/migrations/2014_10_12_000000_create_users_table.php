@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('role_name'); 
             $table->rememberToken();
             $table->timestamps();
+            $table->foreignId('company_id');
         });
     }
 
