@@ -80,7 +80,7 @@ class UserProfileController extends Controller
             'user_name' => $request->user_name,
             'name' => $request->name,
         ];
-        // Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
+        Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
         // Create a new user
         $user = new User([
             'user_name' => $request->user_name,
