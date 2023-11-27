@@ -54,7 +54,7 @@ class CompanyController extends Controller
      */
     public function show(string $company_id)
     {
-        $company = Company::where('id',$company_id)->firstOrFail();
+        $company = Company::where('company_id',$company_id)->firstOrFail();
   
         return view('company.show', compact('company'));
     }
@@ -64,7 +64,7 @@ class CompanyController extends Controller
      */
     public function edit(string $company_id)
     {
-        $company = Company::where('id',$company_id)->firstOrFail();
+        $company = Company::where('company_id',$company_id)->firstOrFail();
         return view('company.edit', compact('company'));
     }
   

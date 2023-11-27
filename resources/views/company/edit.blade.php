@@ -6,7 +6,7 @@
     <!-- <h1 class="mb-0">Edit company</h1> -->
     
     <hr />
-    <form action="{{ route('company.update', $company->id) }}" method="POST">
+    <form action="{{ route('company.update', $company->company_id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="row">
