@@ -5,21 +5,33 @@
 @section('contents')
     <!-- <h1 class="mb-0">Detail project</h1> -->
     <hr />
+    @if(Auth::user()->role_name == 'Master Super Admin - MSA')
     <div class="row">
+        @foreach($associatedCompanies as $company)
+            <div class="col mb-3">
+                <label class="form-label">Company</label>
+                <input type="text" name="title" class="form-control"  name="company_name" value="{{ $company->company_name }}" readonly>
+            </div>
+        @endforeach
         <div class="col mb-3">
             <label class="form-label">Project</label>
             <input type="text" name="title" class="form-control" placeholder="Project" value="{{ $project->project_name }}" readonly>
         </div>
-        <!-- <div class="col mb-3">
-            <label class="form-label">Price</label>
-            <input type="text" name="price" class="form-control" placeholder="Price" value="{{ $project->price }}" readonly>
-        </div> -->
     </div>
+    @else
+        <div class="row">
+            <div class="col mb-3">
+                <label class="form-label">Project</label>
+                <input type="text" name="title" class="form-control" placeholder="Project" value="{{ $project->project_name }}" readonly>
+            </div>
+        </div>
+    @endif
     <div class="form-group">
         <div class="col-md-6 col-md-offset-4">
             <a href="{{ route('project') }}" class="btn btn-secondary">Back</a>
         </div>
     </div>
+
     <!-- <div class="row">
         <div class="col mb-3">
             <label class="form-label">project_code</label>

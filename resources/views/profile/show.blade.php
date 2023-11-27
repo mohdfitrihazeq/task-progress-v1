@@ -7,7 +7,7 @@
     <hr />
     <div class="row mb-3">
     <div class="col-md-6">
-            <label class="form-label">User Name</label>
+            <label class="form-label">User Login Name</label>
             <input type="text" name="user_name" class="form-control" value="{{$profile->user_name}}" readonly required>
         </div>
         <div class="col-md-6">
