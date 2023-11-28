@@ -12,69 +12,53 @@
         </div>
     @endif
     <table class="table table-hover" id="data-table">
-        <thead class="table-primary">
+    <thead class="table-primary">
+        <tr>
+            <th>#</th>
             @if(Auth::user()->role_name == 'Master Super Admin - MSA')
-                <tr>
-                    <th>#</th>
-                    <th>Company</th>
-                    <th>Project</th>
-                    <th>Action</th>
-                </tr>
-            @else
-                <tr>
-                    <th>#</th>
-                    <th>Project</th>
-                    <th>Action</th>
-                </tr>
+                <th>Company</th>
             @endif
-        </thead>
-        <tbody>
-            @if($project->count() > 0)
-                @foreach($project as $rs)
+            <th>Project</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if($projects->count() > 0)
+            @foreach($projects as $project)
+                <tr>
+                    <td class="align-middle">{{ $loop->iteration }}</td>
                     @if(Auth::user()->role_name == 'Master Super Admin - MSA')
-                        @foreach($rs->companies as $company)
-                            <tr>
-                                <td class="align-middle">{{ $loop->parent->iteration }}</td>
-                                <td class="align-middle">{{ $company->company_name }}</td>
-                                <td class="align-middle">{{ $rs->project_name }}</td>
-                                <td class="align-middle">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a href="{{ route('project.show', $rs->id) }}" type="button" class="btn btn-secondary">Detail</a>
-                                        <a href="{{ route('project.edit', $rs->id)}}" type="button" class="btn btn-warning">Edit</a>
-                                        <form action="{{ route('project.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure to Delete?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-danger m-0">Delete</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                        {{-- Display the associated companies for MSA users --}}
+                        <td class="align-middle">
+                            @foreach($project->companies as $company)
+                                {{ $company->company_name }}
+                            @endforeach
+                        </td>
                     @else
-                        <tr>
-                            <td class="align-middle">{{ $loop->iteration }}</td>
-                            <td class="align-middle">{{ $rs->project_name }}</td>
-                            <td class="align-middle">
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="{{ route('project.show', $rs->id) }}" type="button" class="btn btn-secondary">Detail</a>
-                                    <a href="{{ route('project.edit', $rs->id)}}" type="button" class="btn btn-warning">Edit</a>
-                                    <form action="{{ route('project.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure to Delete?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger m-0">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+                        <!-- <td class="align-middle">-</td> -->
                     @endif
-                @endforeach
-            @else
-                <tr>
-                    <td class="text-center" colspan="5">Project not found</td>
+                    <td class="align-middle">{{ $project->project_name ?? ' - ' }}</td>
+                    <td class="align-middle">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="{{ route('project.show', $project->id) }}" type="button" class="btn btn-secondary">Detail</a>
+                            <a href="{{ route('project.edit', $project->id)}}" type="button" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('project.destroy', $project->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure to Delete?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger m-0">Delete</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
-            @endif
-        </tbody>
-    </table>
+            @endforeach
+        @else
+            <tr>
+                <td class="text-center" colspan="{{ Auth::user()->role_name == 'Master Super Admin - MSA' ? '4' : '3' }}">Projects not found</td>
+            </tr>
+        @endif
+    </tbody>
+</table>
 
     <script>    
         $(document).ready(function () {

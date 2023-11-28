@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Company;
 use App\Models\ProjectCompany;
 use App\Models\AuthController;
+use Auth;
  
 class ProjectController extends Controller
 {
@@ -18,12 +19,31 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $project = Project::with('companies')->orderBy('created_at', 'DESC')->get();
-        $companies = Company::orderBy('created_at', 'DESC')->get();
-        $project_company = ProjectCompany::orderBy('created_at', 'DESC')->get();
+        $user = Auth::user();
+        $projects = collect();
+        // Check if the user has a company
+        // dd($user->company);
+        if ($user->company) {
+            // If the user is MSA, get all projects associated with the company
+            if ($user->role_name == 'Master Super Admin - MSA') {
+                // $projects = $user->company->projects;
+                $projects = Project::all(); //showing all project
+            } else {
+                // If the user is not MSA, get projects associated with the user's company_id
+                $companyProjects = Project::whereHas('companies', function ($query) use ($user) {
+                    $query->where('companies.company_id', $user->company_id);
+                })->get();
 
-        return view('project.index', compact('project', 'companies', 'project_company'));
+                $projects = $companyProjects;
+                // dd($projects);
+
+            }
+        }
+
+        return view('project.index', compact('projects'));
     }
+
+
 
   
     /**
@@ -61,14 +81,17 @@ class ProjectController extends Controller
                 $company = Company::find($request->input('company_id'));
 
                 // Attach the project to the specified company
-                $project->companies()->attach($company);
+                // $project->companies()->attach($company);
+                $project->companies()->attach($company->company_id);
             }
         }else{
             // Use \Auth::user()->company_id for company_id
             $company = Company::find(\Auth::user()->company_id);
 
             // Attach the project to the specified company
-            $project->companies()->attach($company);
+            // $project->companies()->attach($company);
+            $project->companies()->attach($company->company_id);
+
         }
 
         return redirect()->route('project')->with('success', 'Project added successfully');
@@ -137,11 +160,20 @@ class ProjectController extends Controller
             'project_name' => $request->input('project_name'),
         ]);
 
-        // Sync the associated company in the pivot table
-        $project->companies()->sync([$request->input('company_id')]);
+        // Check if the user is Master Super Admin - MSA
+        if (\Auth::user()->role_name == 'Master Super Admin - MSA') {
+            // Validate and update the company only if MSA
+            if ($request->has('company_id')) {
+                $company = Company::find($request->input('company_id'));
+
+                // Sync the associated company in the pivot table
+                $project->companies()->sync([$company->company_id]);
+            }
+        }
 
         return redirect()->route('project')->with('success', 'Project updated successfully');
     }
+
 
 
   
