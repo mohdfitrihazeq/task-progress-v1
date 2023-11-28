@@ -16,8 +16,10 @@ class UserProfileController extends Controller
 {
     public function index()
     {
-        $profile = User::orderBy('created_at', 'DESC')->get();
-        return view('profile.index', compact('profile'));
+        $profile = User::with('company')->orderBy('created_at', 'DESC')->get();
+        $company = Company::all();
+
+        return view('profile.index', compact('profile','company'));
     }
 
     public function create()
