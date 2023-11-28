@@ -11,14 +11,13 @@
         @method('PUT')
         @if(Auth::user()->role_name == 'Master Super Admin - MSA')
         <div class="row">
-        <div class="col mb-3">
-            <label class="form-label">Companies</label>
-                @foreach ($companies as $company)
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="company_ids[]" value="{{ $company->company_id }}" {{ $associatedCompanies->contains($company) ? 'checked' : '' }}>
-                        <label class="form-check-label">{{ $company->company_name }}</label>
-                    </div>
-                @endforeach
+            <div class="col mb-3">
+            <label class="form-label">Company</label>
+                <select name="company_id" class="form-control">
+                    @foreach ($companies as $company)
+                        <option value="{{ $company->company_id }}" {{ $associatedCompanies->contains($company) ? 'selected' : '' }}>{{ $company->company_name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col mb-3">
                 <label class="form-label">Project</label>
@@ -32,6 +31,15 @@
                 <input type="text" name="project_name" class="form-control" placeholder="project" value="{{ $project->project_name }}" >
             </div>
         </div>
+        @endif
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">

@@ -106,8 +106,12 @@ class ProjectController extends Controller
         // Get all companies
         $companies = Company::all(); 
 
-        return view('project.edit', compact('project', 'companies', 'associatedCompanies'));
+        // Get all projects
+        $projects = Project::all();
+
+        return view('project.edit', compact('project', 'companies', 'associatedCompanies', 'projects'));
     }
+
 
   
     /**
@@ -120,8 +124,7 @@ class ProjectController extends Controller
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'project_name' => ['required', Rule::unique('projects', 'project_name')->ignore($project->id)],
-            'company_ids' => 'array', // Assuming 'company_ids' is an array in the form
-            'company_ids.*' => 'exists:companies,company_id', // Validate each company_id in the array
+            'company_id' => 'exists:companies,company_id', // Validate the selected company_id
         ]);
 
         // Check if validation fails
@@ -134,11 +137,13 @@ class ProjectController extends Controller
             'project_name' => $request->input('project_name'),
         ]);
 
-        // Sync the associated companies in the pivot table
-        $project->companies()->sync($request->input('company_ids'));
+        // Sync the associated company in the pivot table
+        $project->companies()->sync([$request->input('company_id')]);
 
-    return redirect()->route('project')->with('success', 'Project updated successfully');
+        return redirect()->route('project')->with('success', 'Project updated successfully');
     }
+
+
   
     /**
      * Remove the specified resource from storage.
