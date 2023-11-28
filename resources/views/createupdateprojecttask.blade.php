@@ -23,7 +23,8 @@
             {{ Session::get('success') }}
         </div>
     @endif
-    <form>
+    <form action="{{ route('projecttaskprogress.updateprojecttask') }}" method="POST" enctype="multipart/form-data">
+        @csrf
         <table class="table table-hover" id="data-table">
             <thead class="table-primary">
                 <tr>
@@ -40,15 +41,27 @@
                 @if($projecttaskprogress->count() > 0)
                     @foreach($projecttaskprogress as $rs)
                         <tr>
-                            <td class="align-middle">{{ $rs->task_sequence_no_wbs }}</td>
-                            <td class="align-middle">{{ $rs->task_name }}</td>
-                            <td class="align-middle">{{ $rs->task_actual_start_date }}</td>
-                            <td class="align-middle">{{ $rs->task_actual_end_date }}</td>
-                            <td class="align-middle">{{ $rs->task_progress_percentage }}</td>
-                            <td class="align-middle">{{ $rs->last_update_bywhom }}</td>
+                            <td class="align-middle">
+                                {{ $rs->task_sequence_no_wbs }}
+                            </td>
+                            <td class="align-middle">
+                                {{ $rs->task_name }}
+                            </td>
+                            <td class="align-middle">
+                                <input type="date" name="start[{{$loop->iteration-1}}]" value="{{ $rs->task_actual_start_date }}">
+                            </td>
+                            <td class="align-middle">
+                                <input type="date" name="end[{{$loop->iteration-1}}]" value="{{ $rs->task_actual_end_date }}">
+                            </td>
+                            <td class="align-middle">
+                                <input type="number" min="{{$rs->task_progress_percentage}}" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}">
+                            </td>
+                            <td class="align-middle">
+                                {{ $rs->last_update_bywhom }}
+                            </td>
                             <td class="align-middle">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="{{ route('projecttaskprogress.edit', $rs->id)}}" type="button" class="btn btn-warning">Update</a>
+                                    <button type="submit" name="update[{{$loop->iteration-1}}]" value="{{$rs->id}}" class="btn btn-warning">Update</button>
                                 </div>
                             </td>
                         </tr>

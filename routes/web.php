@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
         Route::get('create','create')->name('projecttaskprogress.create');
         Route::post('store','store')->name('projecttaskprogress.store');
         Route::post('importfromexcel', 'importfromexcel')->name('projecttaskprogress.importfromexcel');
+        Route::post('assigntaskowner', 'assigntaskowner')->name('projecttaskprogress.assigntaskowner');
+        Route::post('updateprojecttask', 'updateprojecttask')->name('projecttaskprogress.updateprojecttask');
         Route::get('show/{id}','show')->name('projecttaskprogress.show');
         Route::get('edit/{id}','edit')->name('projecttaskprogress.edit');
         Route::put('edit/{id}','update')->name('projecttaskprogress.update');

@@ -52,7 +52,7 @@ class AuthController extends Controller
         }
         $input = [
             'password' => bcrypt($request->input('password')),
-            'password_changed_at' => \Carbon\Carbon::now()
+            'password_changed_at' => \Carbon\Carbon::now(),
         ];
 
         User::where('user_name', $user)->update($input);
