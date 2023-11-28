@@ -57,6 +57,7 @@
                                     {{ $rs->company->company_name }}
                                 @endif
                             </td>
+                            <td class="align-middle">{{ $rs->user_name }}</td>
                             <td class="align-middle">{{ $rs->name }}</td>
                             <td class="align-middle">{{ $rs->email }}</td>
                             <td class="align-middle">{{ $rs->role_name }}</td>
