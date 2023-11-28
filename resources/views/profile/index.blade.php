@@ -15,6 +15,9 @@
         <thead class="table-primary">
             <tr>
                 <th>#</th>
+                @if(Auth::user()->role_name == 'Master Super Admin - MSA')
+                    <th>Company Name</th>
+                @endif
                 <th>User Login Name</th>
                 <th>Employee Name</th>
                 <th>Email</th>
@@ -49,6 +52,11 @@
                     @else
                         <tr>
                             <td class="align-middle">{{ $loop->iteration }}</td>
+                            <td class="align-middle">
+                                @if($rs->company)
+                                    {{ $rs->company->company_name }}
+                                @endif
+                            </td>
                             <td class="align-middle">{{ $rs->user_name }}</td>
                             <td class="align-middle">{{ $rs->name }}</td>
                             <td class="align-middle">{{ $rs->email }}</td>
