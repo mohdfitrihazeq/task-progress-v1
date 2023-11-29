@@ -35,6 +35,6 @@ class UniqueProjectForCompany implements Rule
 
     public function message()
     {
-        return 'The project name is not unique for the specified company or other companies.';
+        return 'The project name has been taken.';
     }
 }

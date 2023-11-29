@@ -33,7 +33,7 @@
                 <label class="form-label">Password</label>
                 <!-- <input type="password" name="password" id="passwordInput" class="form-control" placeholder="profile" value="{{ $profile->password }}" required> -->
                 <input type="password" name="new_password" class="form-control" id="passwordInput" placeholder="Reset Password">
-                <small class="form-text text-muted">Leave blank to keep the existing password. The password should at least be a mix of a <b>lower case</b> character ( e.g. a, d),  <b>upper case</b> character (e.g. B, F), <b>number</b> (e.g. 2, 3) and <b>symbol</b> (e.g. &, @)  -> for example,  tpS@12345</small>
+                <small class="form-text text-muted">Leave blank to keep the existing password. The new password should at least be a mix of a <b>lower case</b> character ( e.g. a, d),  <b>upper case</b> character (e.g. B, F), <b>number</b> (e.g. 2, 3) and <b>symbol</b> (e.g. &, @)  -> for example,  tpS@12345</small>
                 <input type="checkbox" onclick="togglePassword()"> Show Password
             </div>
             <!-- <div class="input-group-append">
