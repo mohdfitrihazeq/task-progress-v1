@@ -32,10 +32,10 @@
                     <th>Actual Start Date</th>
                     <th>Actual End Date</th>
                     <th>Task Progress %</th>
-                    <th hidden="hidden">Project</th>
+                    <th>Project</th>
                 </tr>
             </thead>
-            <tbody>+
+            <tbody>
                 @if($projecttaskprogress->count() > 0)
                     @foreach($projecttaskprogress as $rs)
                         <tr>
@@ -44,7 +44,7 @@
                             <td class="align-middle">{{ $rs->task_actual_start_date }}</td>
                             <td class="align-middle">{{ $rs->task_actual_end_date }}</td>
                             <td class="align-middle">{{ $rs->task_progress_percentage }}</td>
-                            <td class="align-middle" hidden="hidden">{{ $rs->project_name }}</td>
+                            <td class="align-middle">{{ $rs->project_name }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -67,6 +67,19 @@
     </div>
 <script>    
     $(document).ready(function () {
+        $('#projectFilter').on('change', function() {
+            var selectedProject = $(this).val();
+
+            $('#data-table tr').each(function() {
+                var row = $(this);
+                
+                if (true) {
+                    row.hide();
+                } else {
+                    row.hide();
+                }
+            });
+        });
         $('#data-table').DataTable({
             dom: 'Bfrtip', // Add the export buttons to the DOM
             buttons: [

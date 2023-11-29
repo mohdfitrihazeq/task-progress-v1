@@ -31,7 +31,7 @@ class FirstLoginMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Firstlogin',
+            subject: 'Task Progress 1st time login password change',
         );
     }
 

@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('companies', function (Blueprint $table) {
-            $table->id();
+            $table->id('company_id');
             $table->string('company_name');
             $table->timestamps();
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('company_id')->constrained(); 
+            $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
         });
     }
 
