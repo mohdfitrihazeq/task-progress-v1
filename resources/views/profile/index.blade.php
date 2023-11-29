@@ -48,7 +48,11 @@
                                         </form>
                                     </div>
                                 </td>
-                                
+                                <td class="align-middle">
+                                    <a class="nav-link" href="{{ route('access.edit', $rs->id)}}">
+                                        <i class="fas fa-fw fa-cog"></i>
+                                    <span>Add</span></a>
+                                </td>
                             </tr>
                         @endif
                     @else
@@ -75,9 +79,9 @@
                                 </div>
                             </td>
                             <td class="align-middle">
-                                    <a class="nav-link" href="{{ route('access.edit', $rs->id)}}">
-                                        <i class="fas fa-fw fa-cog"></i>
-                                        <span>Add</span></a>
+                                <a class="nav-link" href="{{ route('access.edit', $rs->id)}}">
+                                    <i class="fas fa-fw fa-cog"></i>
+                                <span>Add</span></a>
                             </td>
                         </tr>
                     @endif

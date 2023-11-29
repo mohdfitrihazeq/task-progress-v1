@@ -115,29 +115,50 @@ class UserAccessibleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // dd($request);
+        // Validate the request data
         $validator = Validator::make($request->all(), [
-            'project_id' => [Rule::unique('user_accessibles', 'project_id')],
+            'project_id' => [
+                function ($attribute, $value, $fail) use ($request, $id) {
+                    // Check if the combination of project_id and user_name already exists
+                    $existingRecord = UserAccessible::where('project_id', $request->project_id)
+                        ->where('user_name', $request->user_name)
+                        ->first();
+
+                    if ($existingRecord && $existingRecord->user_name === $request->user_name) {
+                        // The combination already exists with the same user_name
+                        $fail("The combination of project name and user already exists.");
+                    }
+
+                    // Check if the user already has 10 projects
+                    $userProjectsCount = UserAccessible::where('user_name', $request->user_name)->count();
+
+                    if ($userProjectsCount >= 10) {
+                        $fail("The user has already hit the Max 10 projects in the user's project accessible list");
+                    }
+                },
+            ],
         ]);
 
+
+        // If validation fails, redirect back with errors
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         // Create or update the user_accessible record
-        $user_accessible = new UserAccessible([ 
+        $user_accessible = new UserAccessible([
             'user_name' => $request->user_name,
             'project_id' => $request->project_id,
-            
         ]);
 
         $user_accessible->save();
+
         $profile = User::findOrFail($id);
-        // dd($user_accessible);
 
         return redirect()->route('access.edit', ['id' => $profile->id])->with('success', 'Profile updated successfully');
-
     }
+
+
 
 
 
