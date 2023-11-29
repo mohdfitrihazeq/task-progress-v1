@@ -138,7 +138,7 @@
                             <td class="align-middle">
                                 <Select name="assigntaskowner[{{ $loop->iteration-1 }}]" class="form-control">
                                 @foreach($user as $rs)
-                                    <option value="{{ $rs->id }}">{{ $rs->name }}</option>
+                                    <option value="{{ $rs->id }}">{{ $rs->user_name }} - {{ $rs->name }}</option>
                                 @endforeach
                                 </Select>
                             </td>

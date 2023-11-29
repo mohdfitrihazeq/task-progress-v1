@@ -117,7 +117,7 @@ class ProjectTaskProgressController extends Controller
                 $projecttaskprogress->delete();
             }
             if($request->input("update")!=null){
-                $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key]]);
+                $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,]);
             }
         }
         return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress assigned successfully');
@@ -127,7 +127,7 @@ class ProjectTaskProgressController extends Controller
     {
         foreach($request->all()['update'] as $key => $value){
             $projecttaskprogress = ProjectTaskProgress::findOrFail($value);
-            $projecttaskprogress->update(['task_actual_start_date'=>$request->all()['start'][$key],'task_actual_end_date'=>$request->all()['end'][$key],'task_progress_percentage'=>$request->all()['progress'][$key]]);
+            $projecttaskprogress->update(['task_actual_start_date'=>$request->all()['start'][$key],'task_actual_end_date'=>$request->all()['end'][$key],'task_progress_percentage'=>$request->all()['progress'][$key],'last_update_bywhom'=>$request->all()['progress'][$key],'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,]);
         }
         return redirect()->route('projecttaskprogress.createupdateprojecttask')->with('success', 'project task progress updated successfully');
     }
