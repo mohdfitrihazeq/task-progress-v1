@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
+
 class UserProfileController extends Controller
 {
     public function index()
@@ -141,12 +142,14 @@ class UserProfileController extends Controller
         // Access form input
         $validator = Validator::make($request->all(), [
             'new_password' => [
-                'nullable', // Allow null values
+                'nullable',
                 'min:6',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
             ],
         ]);
-    
+        
+        $validator->messages()->add('new_password.regex', 'The password should at least be a mix of a lower case character (e.g., a, d), an upper case character (e.g., B, F), a number (e.g., 2, 3), and a symbol (e.g., &, @). For example, tpS@12345.');
+        
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
