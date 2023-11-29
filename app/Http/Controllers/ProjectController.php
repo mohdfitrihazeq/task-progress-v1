@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\ProjectCompany;
 use App\Models\AuthController;
 use Auth;
+use App\Rules\UniqueProjectForCompany;
  
 class ProjectController extends Controller
 {
@@ -61,7 +62,10 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'project_name' => ['required', Rule::unique('projects', 'project_name')],
+            'project_name' => [
+                'required',
+                new UniqueProjectForCompany($request->input('company_id')),
+            ],
         ]);
 
         // Check if validation fails
@@ -81,17 +85,14 @@ class ProjectController extends Controller
                 $company = Company::find($request->input('company_id'));
 
                 // Attach the project to the specified company
-                // $project->companies()->attach($company);
                 $project->companies()->attach($company->company_id);
             }
-        }else{
+        } else {
             // Use \Auth::user()->company_id for company_id
             $company = Company::find(\Auth::user()->company_id);
 
             // Attach the project to the specified company
-            // $project->companies()->attach($company);
             $project->companies()->attach($company->company_id);
-
         }
 
         return redirect()->route('project')->with('success', 'Project added successfully');

@@ -11,16 +11,32 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Auth;
 
 class UserProfileController extends Controller
 {
     public function index()
     {
-        $profile = User::with('company')->orderBy('created_at', 'DESC')->get();
+        $user = Auth::user();
+        $profile = collect();
         $company = Company::all();
 
-        return view('profile.index', compact('profile','company'));
+        // Check if the user has a company
+        if ($user->company) {
+            // If the user is MSA, get all profiles
+            if ($user->role_name == 'Master Super Admin - MSA') {
+                $profiles = User::with('company')->orderBy('created_at', 'DESC')->get();
+            } else {
+                // If the user is not MSA, get profiles associated with the user's company_id
+                $companyProfiles = User::where('company_id', $user->company_id)->with('company')->orderBy('created_at', 'DESC')->get();
+                $profile = $companyProfiles;
+                // dd($profiles);
+            }
+        }
+
+        return view('profile.index', compact('profile', 'company'));
     }
+
 
     public function create()
     {
@@ -141,12 +157,14 @@ class UserProfileController extends Controller
         // Access form input
         $validator = Validator::make($request->all(), [
             'new_password' => [
-                'nullable', // Allow null values
+                'nullable',
                 'min:6',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
             ],
         ]);
-    
+        
+        $validator->messages()->add('new_password.regex', 'The password should at least be a mix of a lower case character (e.g., a, d), an upper case character (e.g., B, F), a number (e.g., 2, 3), and a symbol (e.g., &, @). For example, tpS@12345.');
+        
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
