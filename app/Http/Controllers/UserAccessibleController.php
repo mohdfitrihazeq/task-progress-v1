@@ -178,7 +178,7 @@ class UserAccessibleController extends Controller
         $user_id = $user->id;
     
         // Redirect to access.edit with the user's profile ID
-        return redirect()->route('access.edit', ['id' => $user_id])->with('delete', 'User accessible deleted successfully');
+        return redirect()->route('access.edit', ['id' => $user_id])->with('success', 'User accessible deleted successfully');
     }
     
 

@@ -20,17 +20,26 @@ class UniqueProjectForCompany implements Rule
         // Check if the project name is unique for the specified company
         $existsForCompany = Project::where('project_name', $value)
             ->whereHas('companies', function ($query) {
-                $query->where('project_company.company_id', $this->company_id);
-                // ^ Specify the table alias for company_id
+                $query->where('project_company.company_id', $this->getCompanyId());
             })
-            ->exists();
+            ->count() > 0;
 
         // Check if the project name is unique for any other company
         $existsForOtherCompany = Project::where('project_name', $value)
             ->doesntHave('companies')
-            ->exists();
+            ->count() > 0;
 
         return !$existsForCompany && !$existsForOtherCompany;
+    }
+
+    private function getCompanyId()
+    {
+        // Determine the correct company_id based on user role
+        if (\Auth::user()->role_name == 'Master Super Admin - MSA') {
+            return $this->company_id;
+        } else {
+            return \Auth::user()->company_id;
+        }
     }
 
     public function message()
