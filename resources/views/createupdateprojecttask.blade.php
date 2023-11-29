@@ -40,7 +40,7 @@
             <tbody>
                 @if($projecttaskprogress->count() > 0)
                     @foreach($projecttaskprogress as $rs)
-                        <tr>
+                        <tr data-project="{{$rs->project_id}}">
                             <td class="align-middle">
                                 {{ $rs->task_sequence_no_wbs }}
                             </td>
@@ -77,10 +77,22 @@
 
 <script>    
     $(document).ready(function () {
-        $("#select_all").on('click', function() {
-            var nodesObj = $('#dataTables').DataTable().columns( [ 0, 6 ] ).nodes().to$();
-            var nodesArray = nodesObj[0].concat( nodesObj[1] );
-            $(nodesArray).find('input[type="checkbox"]:enabled:visible').prop('checked', 'true');
+        
+        $('#projectFilter').on('change', function() {
+            var selectedProject = $(this).val();
+
+            var table = document.getElementById('data-table');
+            var rows = table.getElementsByTagName('tr');
+
+            // Loop through each <tr> element and log its content
+            for (var i = 1; i < rows.length; i++) {
+                if(rows[i].getAttribute('data-project')!=selectedProject){
+                    rows[i].style.display='none';
+                }
+                else{
+                    rows[i].style.display='table-row';
+                }
+            }
         });
         $('#data-table').DataTable({
             dom: 'Bfrtip', // Add the export buttons to the DOM
@@ -91,12 +103,6 @@
                         columns: [0,1] // Include only the first column in the export
                     }
                 },
-                {
-                    extend: 'pdf',
-                    exportOptions: {
-                        columns: [0,1] // Include only the first column in the export
-                    }
-                }
             ]
         });
     });

@@ -2,24 +2,26 @@
   
 <!-- @section('title', 'Project Task Progress') -->
 @section('contents')
-@if(Session::has('data'))
-<div class="modal" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Alert Message</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Please assign Task owner to your Project Task Names For the Project “{{Session::get('data')['0']['project_name']}}”
-</div>
-            <div class="modal-footer">
-                <button id="dataDismiss" class="btn btn-secondary" type="button" data-dismiss="modal">OK</button>
+@if($unassigned->count()>0)
+    @foreach($unassigned as $rs)
+    <div class="modal" id="dataModal_{{$rs->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Alert Message</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Please assign Task owner to your Project Task Names For the Project “{{$rs->project_name}}”
+                </div>
+                <div class="modal-footer">
+                    <button name="dataDismiss" class="btn btn-secondary" type="button" data-dismiss="modal">OK</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    @endforeach
 @endif
     <div class="d-flex align-items-center justify-content-between pb-5">
         <h1 class="mb-0">Task Progress</h1>
@@ -121,24 +123,29 @@
                 </tr>
             </thead>
             <tbody>
-                @if(Session::has('data'))
-                    @foreach(Session::get('data') as $rs)
-                        <tr>
+                @if($projecttaskprogress->count() > 0)
+                    @foreach($projecttaskprogress as $rs)
+                        <tr data-project="{{$rs->project_id}}">
                             <td class="align-middle">
-                                <input type="checkbox" name="assigntaskid[{{ $loop->iteration-1 }}]" class="form-control" value="{{ $rs['id']; }}">
+                                <input type="checkbox" name="assigntaskid[{{ $loop->iteration-1 }}]" class="form-control" value="{{ $rs->id; }}">
                                 </input>
                             </td>
                             <td class="align-middle">
-                                {{ $rs['task_sequence_no_wbs']; }}
+                                {{ $rs->task_sequence_no_wbs; }}
                             </td>
                             <td class="align-middle">
-                                <input type="text" name="assigntaskname[{{ $loop->iteration-1 }}]" class="form-control" value="{{ $rs['task_name']; }}">
+                                <input type="text" name="assigntaskname[{{ $loop->iteration-1 }}]" class="form-control" value="{{ $rs->task_name; }}">
                                 </input>
                             </td>
                             <td class="align-middle">
                                 <Select name="assigntaskowner[{{ $loop->iteration-1 }}]" class="form-control">
-                                @foreach($user as $rs)
-                                    <option value="{{ $rs->id }}">{{ $rs->user_name }} - {{ $rs->name }}</option>
+                                <option value=""></option>
+                                @foreach($user as $rsuser)
+                                    <option value="{{ $rsuser->id }}"
+                                    @if ($rsuser->id == $rs->user_login_name)
+                                    selected="selected"
+                                    @endif
+                                    >{{ $rsuser->user_name }} - {{ $rsuser->name }}</option>
                                 @endforeach
                                 </Select>
                             </td>
@@ -160,34 +167,39 @@
     </form>
 <script>    
     $(document).ready(function () {
-        $('#dataModal')[0].style.display="block";
-        $('#dataDismiss').on('click', function() {
-            $('#dataModal')[0].style.display="none";
-        });
+        var elements = document.getElementsByName('dataDismiss');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].addEventListener('click', function() {
+                // Handle click event for each element
+                var modals = document.getElementsByClassName('modal');
+                for (var j = 0; j < modals.length; j++) {
+                    modals[j].style.display='none';
+                }
+            });
+        }
         $('#projectFilter').on('change', function() {
             var selectedProject = $(this).val();
+            if(document.getElementById("dataModal_"+selectedProject)!=null){
+            document.getElementById("dataModal_"+selectedProject).style.display="block";
+            }
             var selectElement = document.getElementById('projectFilter');
             var selectedValue = selectElement.options[selectElement.selectedIndex].innerHTML;
             document.getElementById("project_id").value=selectedProject;
             document.getElementById("importfromexcelprojectid").value=selectedProject;
             document.getElementById("importfromexcelprojectname").innerHTML=selectedValue;
-        });
-        $('#data-table').DataTable({
-            dom: 'Bfrtip', // Add the export buttons to the DOM
-            buttons: [
-                {
-                    extend: 'excel',
-                    exportOptions: {
-                        columns: [0,1] // Include only the first column in the export
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    exportOptions: {
-                        columns: [0,1] // Include only the first column in the export
-                    }
+
+            var table = document.getElementById('data-table');
+            var rows = table.getElementsByTagName('tr');
+
+            // Loop through each <tr> element and log its content
+            for (var i = 1; i < rows.length; i++) {
+                if(rows[i].getAttribute('data-project')!=selectedProject){
+                    rows[i].style.display='none';
                 }
-            ]
+                else{
+                    rows[i].style.display='table-row';
+                }
+            }
         });
     });
 </script>

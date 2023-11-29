@@ -17,10 +17,11 @@ class ProjectTaskProgressController extends Controller
 
     public function createnewprojecttaskname()
     {
-        $projecttaskprogress = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('task_progress_percentage','<',100)->orderBy('project_task_progress.id', 'DESC')->get();
+        $projecttaskprogress = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('task_progress_percentage',0)->select('project_task_progress.*','projects.project_name')->orderBy('project_task_progress.id', 'DESC')->get();
+        $unassigned = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('user_login_name',null)->selectRaw('projects.id,projects.project_name,count(*) AS unassigned_count')->groupBy('projects.id','projects.project_name')->get();
         $project =  Project::orderBy('id','ASC')->get();
         $user =  User::orderBy('id','ASC')->get();
-        return view('createnewprojecttaskname', compact('projecttaskprogress','project','user'));
+        return view('createnewprojecttaskname', compact('projecttaskprogress','project','user','unassigned'));
     }
 
     public function createupdateprojecttask()
@@ -76,7 +77,6 @@ class ProjectTaskProgressController extends Controller
 
     public function importfromexcel(Request $request)
     {
-        $projecttaskprogressarray = [];
         $file = $request->file('file');
         $fileContents = file($file->getPathname());
         $project = $request->input('importfromexcelprojectid');
@@ -103,10 +103,9 @@ class ProjectTaskProgressController extends Controller
                     'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,
                     // Add more fields as needed
                 ]);
-                array_push($projecttaskprogressarray,['id'=>$projecttaskprogress->id,'task_sequence_no_wbs'=>$projecttaskprogress->task_sequence_no_wbs,'task_name'=>$projecttaskprogress->task_name,'project_name'=>$projectname]);
             }
         } 
-        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress added successfully')->with('data',$projecttaskprogressarray);
+        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress added successfully');
     }
   
     public function assigntaskowner(Request $request)
@@ -117,7 +116,7 @@ class ProjectTaskProgressController extends Controller
                 $projecttaskprogress->delete();
             }
             if($request->input("update")!=null){
-                $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,]);
+                $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => "'".\Carbon\Carbon::now().' - '.auth()->user()->name."'",]);
             }
         }
         return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress assigned successfully');
