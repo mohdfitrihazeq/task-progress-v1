@@ -23,6 +23,7 @@
                 <th>Email</th>
                 <th>Role</th>
                 <th>Action</th>
+                <th>Project Accessible List</th>
             </tr>
         </thead>
         <tbody>
@@ -47,6 +48,7 @@
                                         </form>
                                     </div>
                                 </td>
+                                
                             </tr>
                         @endif
                     @else
@@ -71,6 +73,11 @@
                                         <button class="btn btn-danger m-0">Delete</button>
                                     </form>
                                 </div>
+                            </td>
+                            <td class="align-middle">
+                                    <a class="nav-link" href="{{ route('access.edit', $rs->id)}}">
+                                        <i class="fas fa-fw fa-cog"></i>
+                                        <span>Add</span></a>
                             </td>
                         </tr>
                     @endif

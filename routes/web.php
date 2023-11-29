@@ -7,6 +7,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ProjectTaskProgressController;
+use App\Http\Controllers\UserAccessibleController;
  
 Route::get('/', function () {
     return redirect()->route('login'); // Redirect to the login route
@@ -100,6 +101,16 @@ Route::middleware('auth')->group(function () {
         Route::put('editpassword/{id}', [UserProfileController::class, 'updatePassword'])->name('profile.updatepassword');
         Route::delete('destroy/{id}', [UserProfileController::class, 'destroy'])->name('profile.destroy');
     });
+
+    Route::controller(UserAccessibleController::class)->prefix('access')->group(function () {
+        Route::get('', 'index')->name('access');
+        Route::get('create', 'create')->name('access.create');
+        Route::post('store', 'store')->name('access.store');
+        Route::get('show/{id}', 'show')->name('access.show');
+        Route::get('edit/{id}', 'edit')->name('access.edit');
+        Route::put('edit/{id}', 'update')->name('access.update');
+        Route::delete('destroy/{id}', 'destroy')->name('access.destroy');
+    });    
     // Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
 
 });
