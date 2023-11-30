@@ -25,7 +25,7 @@ class UserProfileController extends Controller
         if ($user->company) {
             // If the user is MSA, get all profiles
             if ($user->role_name == 'Master Super Admin - MSA') {
-                $profiles = User::with('company')->orderBy('created_at', 'DESC')->get();
+                $profile = User::with('company')->orderBy('created_at', 'DESC')->get();
             } else {
                 // If the user is not MSA, get profiles associated with the user's company_id
                 $companyProfiles = User::where('company_id', $user->company_id)->with('company')->orderBy('created_at', 'DESC')->get();
@@ -33,7 +33,7 @@ class UserProfileController extends Controller
                 // dd($profiles);
             }
         }
-
+        // dd($profile);
         return view('profile.index', compact('profile', 'company'));
     }
 
