@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ProjectTaskProgress;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\UserAccessible;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
  
@@ -17,24 +18,103 @@ class ProjectTaskProgressController extends Controller
 
     public function createnewprojecttaskname()
     {
-        $projecttaskprogress = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('task_progress_percentage',0)->select('project_task_progress.*','projects.project_name')->orderBy('project_task_progress.id', 'DESC')->get();
+        $projecttaskprogress = ProjectTaskProgress::select(
+            'project_task_progress.id',
+            'project_task_progress.project_id',
+            'project_task_progress.task_sequence_no_wbs',
+            'project_task_progress.task_name',
+            // Include other selected columns here
+            'projects.project_name',
+            'users.user_name',
+            'users.name'
+        )
+        ->join('projects', 'project_task_progress.project_id', '=', 'projects.id')
+        ->leftJoin('users', 'project_task_progress.user_login_name', '=', 'users.id')
+        ->join('user_accessibles', 'user_accessibles.project_id', '=', 'project_task_progress.project_id')
+        ->where('user_accessibles.user_name', '=', auth()->user()->user_name)
+        ->where('task_progress_percentage', '=', 0)
+        ->groupBy(
+            'project_task_progress.id',
+            'project_task_progress.project_id',
+            'project_task_progress.task_sequence_no_wbs',
+            'project_task_progress.task_name',
+            // Include other selected columns here
+            'projects.project_name',
+            'users.user_name',
+            'users.name'
+        )
+        ->orderByDesc('project_task_progress.id')
+        ->get();
         $unassigned = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('user_login_name',null)->selectRaw('projects.id,projects.project_name,count(*) AS unassigned_count')->groupBy('projects.id','projects.project_name')->get();
-        $project =  Project::orderBy('id','ASC')->get();
-        $user =  User::orderBy('id','ASC')->get();
+        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
+        $user =  User::join('user_accessibles','users.user_name','=','user_accessibles.user_name')->whereIn('user_accessibles.project_id',UserAccessible::select('project_id')->where('user_name',auth()->user()->user_name)->get())->select('users.id','users.user_name','users.name','user_accessibles.project_id')->groupBy('users.id','users.name','users.user_name','user_accessibles.project_id')->orderBy('users.id','ASC')->get();
         return view('createnewprojecttaskname', compact('projecttaskprogress','project','user','unassigned'));
     }
 
     public function createupdateprojecttask()
     {
-        $projecttaskprogress = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('task_progress_percentage','<',100)->select('project_task_progress.*','projects.project_name')->orderBy('project_task_progress.id', 'DESC')->get();
-        $project =  Project::orderBy('id','ASC')->get();
+        $projecttaskprogress = ProjectTaskProgress::select(
+            'project_task_progress.id',
+            'project_task_progress.project_id',
+            'project_task_progress.task_sequence_no_wbs',
+            'project_task_progress.task_name',
+            // Include other selected columns here
+            'projects.project_name',
+            'users.user_name',
+            'users.name'
+        )
+        ->join('projects', 'project_task_progress.project_id', '=', 'projects.id')
+        ->leftJoin('users', 'project_task_progress.user_login_name', '=', 'users.id')
+        ->join('user_accessibles', 'user_accessibles.project_id', '=', 'project_task_progress.project_id')
+        ->where('user_accessibles.user_name', '=', auth()->user()->user_name)
+        ->where('project_task_progress.user_login_name', '=', auth()->user()->id)
+        ->where('task_progress_percentage','<',100)
+        ->groupBy(
+            'project_task_progress.id',
+            'project_task_progress.project_id',
+            'project_task_progress.task_sequence_no_wbs',
+            'project_task_progress.task_name',
+            // Include other selected columns here
+            'projects.project_name',
+            'users.user_name',
+            'users.name'
+        )
+        ->orderByDesc('project_task_progress.id')
+        ->get();
+        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
         return view('createupdateprojecttask', compact('projecttaskprogress','project'));
     }
 
     public function completedprojecttask()
     {
-        $projecttaskprogress = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('task_progress_percentage',100)->orderBy('project_task_progress.id', 'DESC')->get();
-        $project =  Project::orderBy('id','ASC')->get();
+        $projecttaskprogress = ProjectTaskProgress::select(
+            'project_task_progress.id',
+            'project_task_progress.project_id',
+            'project_task_progress.task_sequence_no_wbs',
+            'project_task_progress.task_name',
+            // Include other selected columns here
+            'projects.project_name',
+            'users.user_name',
+            'users.name'
+        )
+        ->join('projects', 'project_task_progress.project_id', '=', 'projects.id')
+        ->join('users', 'project_task_progress.user_login_name', '=', 'users.id')
+        ->join('user_accessibles', 'user_accessibles.project_id', '=', 'project_task_progress.project_id')
+        ->where('user_accessibles.user_name', '=', auth()->user()->user_name)
+        ->where('task_progress_percentage',100)
+        ->groupBy(
+            'project_task_progress.id',
+            'project_task_progress.project_id',
+            'project_task_progress.task_sequence_no_wbs',
+            'project_task_progress.task_name',
+            // Include other selected columns here
+            'projects.project_name',
+            'users.user_name',
+            'users.name'
+        )
+        ->orderByDesc('project_task_progress.id')
+        ->get();
+        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
         return view('completedprojecttask', compact('projecttaskprogress','project'));
     }
   

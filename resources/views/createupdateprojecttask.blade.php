@@ -1,10 +1,10 @@
 @extends('layouts.app')
   
-<!-- @section('title', 'Project Task Progress') -->
+<!-- @section('title', 'Task Planning') -->
   
 @section('contents')
     <div class="d-flex align-items-center justify-content-between pb-5">
-        <h1 class="mb-0">Task Progress</h1>
+        <h3 class="mb-0">Task Planning</h3>
         <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
         <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-primary">Update Project Task</a>
         <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-primary">Completed Project Task</a>
@@ -12,6 +12,7 @@
     <div class="d-flex align-items-center justify-content-between">
         <h6 class="mb-0">Task planning for the project: </h1>
         <select id="projectFilter" name="projectFilter" class="form-control" aria-label="Project Filter">
+                    <option value="">Select Project</option>
             @foreach($project as $rs)
                     <option value="{{ $rs->id }}">{{ $rs->project_name }}</option>
             @endforeach
@@ -31,7 +32,7 @@
                     <th>Task Sequence No. (WBS)</th>
                     <th>Task Name</th>
                     <th>Actual Start Date</th>
-                    <th>Actual Start Date</th>
+                    <th>Actual End Date</th>
                     <th>Task progress %</th>
                     <th>Last update & by whom</th>
                     <th>Action</th>
@@ -86,24 +87,13 @@
 
             // Loop through each <tr> element and log its content
             for (var i = 1; i < rows.length; i++) {
-                if(rows[i].getAttribute('data-project')!=selectedProject){
+                if(rows[i].getAttribute('data-project')!=selectedProject&&selectedProject!=''   ){
                     rows[i].style.display='none';
                 }
                 else{
                     rows[i].style.display='table-row';
                 }
             }
-        });
-        $('#data-table').DataTable({
-            dom: 'Bfrtip', // Add the export buttons to the DOM
-            buttons: [
-                {
-                    extend: 'excel',
-                    exportOptions: {
-                        columns: [0,1] // Include only the first column in the export
-                    }
-                },
-            ]
         });
     });
 </script>
