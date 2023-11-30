@@ -3,8 +3,6 @@
 @section('title', 'Edit User')
   
 @section('contents')
-    <!-- <h1 class="mb-0">Edit profile</h1> -->
-    
     <hr />
     <form action="{{ route('profile.edit', $profile->id) }}" method="POST">
         @csrf
@@ -13,52 +11,43 @@
         @if(Auth::user()->role_name == 'Master Super Admin - MSA')
             <div class="col mb-3">
                 <label class="form-label">Company</label>
-                <!-- <input type="text" name="company_id" class="form-control" placeholder="profile" value="{{ $profile->company_id }}" required> -->
                 <select class="form-control" name="role_name" placeholder="Role">
                     @foreach ($companies as $company)
-                    <option value="{{ $company->company_id }}" {{ $profile->company_id == $company->company_id ? 'selected' : '' }}>
-                        {{ $company->company_name }}
-                    </option>
+                        <option value="{{ $company->company_id }}" {{ old('company_id', $profile->company_id) == $company->company_id ? 'selected' : '' }}>
+                            {{ $company->company_name }}
+                        </option>
                     @endforeach
                 </select>
             </div>
         @endif
             <div class="col mb-3">
                 <label class="form-label">User Login Name</label>
-                <input type="text" name="user_name" class="form-control" placeholder="profile" value="{{ $profile->user_name }}" readonly required>
+                <input type="text" name="user_name" class="form-control" placeholder="profile" value="{{ old('user_name', $profile->user_name) }}" readonly required>
             </div>
         </div>
         <div class="row">
             <div class="col mb-3">
                 <label class="form-label">Password</label>
-                <!-- <input type="password" name="password" id="passwordInput" class="form-control" placeholder="profile" value="{{ $profile->password }}" required> -->
                 <input type="password" name="new_password" class="form-control" id="passwordInput" placeholder="Reset Password">
                 <small class="form-text text-muted">Leave blank to keep the existing password. The new password should at least be a mix of a <b>lower case</b> character ( e.g. a, d),  <b>upper case</b> character (e.g. B, F), <b>number</b> (e.g. 2, 3) and <b>symbol</b> (e.g. &, @)  -> for example,  tpS@12345</small>
                 <input type="checkbox" onclick="togglePassword()"> Show Password
             </div>
-            <!-- <div class="input-group-append">
-                <div class="input-group-text">
-                    <input type="checkbox" onclick="togglePassword()"> Show
-                </div>
-            </div> -->
             <div class="col mb-3">
                 <label class="form-label">Employee Name</label>
-                <input type="text" name="name" class="form-control" placeholder="profile" value="{{ $profile->name }}" required>
+                <input type="text" name="name" class="form-control" placeholder="profile" value="{{ old('name', $profile->name) }}" required>
             </div>
         </div>
         <div class="row">
             <div class="col mb-3">
                 <label class="form-label">Email</label>
-                <input type="text" name="email" class="form-control" placeholder="profile" value="{{ $profile->email }}" required>
+                <input type="email" name="email" class="form-control" placeholder="profile" value="{{ old('email', $profile->email) }}" required>
             </div>
             <div class="col-md-6 col-md-offset-4 mb-3">
                 <label class="form-label">Role</label>
-                <!-- <input type="text" name="role_name" class="form-control" placeholder="Role" value="{{ $profile->role_name }}" required> -->
-                <!-- <label class="labels">Role</label> -->
                 <select class="form-control" name="role_name" placeholder="Role">
                     @foreach ($roles as $role)
                         @if(Auth::user()->role_name == 'Master Super Admin - MSA' || $role->role_name != 'Master Super Admin - MSA')
-                        <option value="{{ $role->role_name }}" {{ $profile->role_name == $role->role_name ? 'selected' : '' }}>
+                        <option value="{{ $role->role_name }}" {{ old('role_name', $profile->role_name) == $role->role_name ? 'selected' : '' }}>
                             {{ $role->role_name }}
                         </option>
                         @endif

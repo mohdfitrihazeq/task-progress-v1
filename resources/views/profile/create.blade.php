@@ -10,17 +10,17 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">User Login Name</label>
-                <input type="text" name="user_name" class="form-control" placeholder="User Name" required>
+                <input type="text" name="user_name" class="form-control" placeholder="User Name" value="{{ old('user_name') }}" required>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Employee Name</label>
-                <input type="text" name="name" class="form-control" placeholder="Name" required>
+                <input type="text" name="name" class="form-control" placeholder="Name" value="{{ old('name') }}" required>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">Email</label>
-                <input type="text" name="email" class="form-control" placeholder="Email" required>
+                <input type="text" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
             </div>
             <div class="col-md-6">
                 <!-- <input type="text" name="role_name" class="form-control" placeholder="Role" required> -->
@@ -28,7 +28,7 @@
                 <select class="form-control" name="role_name" placeholder="Role">
                     @foreach ($roles as $role)
                         @if(Auth::user()->role_name == 'Master Super Admin - MSA' || $role->role_name != 'Master Super Admin - MSA')
-                            <option value="{{ $role->role_name }}">{{ $role->role_name }}</option>
+                        <option value="{{ $role->role_name }}" {{ old('role_name') == $role->role_name ? 'selected' : '' }}>{{ $role->role_name }}</option>
                         @endif
                     @endforeach
                 </select>
@@ -49,7 +49,7 @@
                     <label class="form-label">Company</label>
                     <select class="form-control" name="company_id" placeholder="Company">
                         @foreach ($companies as $company)
-                            <option value="{{ $company->company_id }}">{{ $company->company_name }}</option>
+                            <option value="{{ $company->company_id }}" {{ old('company_id') == $company->company_id ? 'selected' : '' }}>{{ $company->company_name }}</option>
                         @endforeach
                     </select>
                 </div>

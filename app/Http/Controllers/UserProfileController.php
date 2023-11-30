@@ -161,6 +161,16 @@ class UserProfileController extends Controller
                 'min:6',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
             ],
+            'email' => [
+                'required',
+                'email',
+                function ($attribute, $value, $fail) {
+                    // Check if the email contains '@' and '.'
+                    if (strpos($value, '@') === false || strpos($value, '.') === false) {
+                        $fail('Error '.$attribute.'. Please ensure it has "@" or "." !');
+                    }
+                },
+            ],
         ]);
         
         $validator->messages()->add('new_password.regex', 'The password should at least be a mix of a lower case character (e.g., a, d), an upper case character (e.g., B, F), a number (e.g., 2, 3), and a symbol (e.g., &, @). For example, tpS@12345.');

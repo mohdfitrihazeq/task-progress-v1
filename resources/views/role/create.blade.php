@@ -10,7 +10,7 @@
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Role</label>
-                <input type="text" name="role_name" class="form-control" placeholder="Role" required>
+                <input type="text" name="role_name" class="form-control" placeholder="Role"  value="{{ old('role_name') }}"required>
             </div>
             <!-- <div class="col">
                 <select class="form-control" name="role_name">
@@ -28,18 +28,7 @@
                     <option value="VIEW">Viewing</option>
                 </select>
             </div> -->
-            <!-- <div class="col">
-                <input type="text" name="price" class="form-control" placeholder="Price">
-            </div> -->
         </div>
-        <!-- <div class="row mb-3">
-            <div class="col">
-                <input type="text" name="product_code" class="form-control" placeholder="Product Code">
-            </div>
-            <div class="col">
-                <textarea class="form-control" name="description" placeholder="Descriptoin"></textarea>
-            </div>
-        </div> -->
         @if($errors->any())
             <div class="alert alert-danger">
                 <ul>

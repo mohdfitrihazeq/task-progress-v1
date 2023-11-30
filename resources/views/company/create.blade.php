@@ -12,18 +12,7 @@
                 <label class="form-label">Company</label>
                 <input type="text" name="company_name" class="form-control" placeholder="Company Name" required>
             </div>
-            <!-- <div class="col">
-                <input type="text" name="price" class="form-control" placeholder="Price">
-            </div> -->
         </div>
-        <!-- <div class="row mb-3">
-            <div class="col">
-                <input type="text" name="product_code" class="form-control" placeholder="Product Code">
-            </div>
-            <div class="col">
-                <textarea class="form-control" name="description" placeholder="Descriptoin"></textarea>
-            </div>
-        </div> -->
         @if($errors->any())
             <div class="alert alert-danger">
                 <ul>

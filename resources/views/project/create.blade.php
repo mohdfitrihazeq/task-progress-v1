@@ -21,7 +21,7 @@
                 </div>
                 <div class="col">
                     <label class="form-label">Project</label>
-                    <input type="text" name="project_name" class="form-control" placeholder="project" required>
+                    <input type="text" name="project_name" class="form-control" placeholder="project" value="{{ old('project_name') }}"required>
                 </div>
             </div>
         @else
