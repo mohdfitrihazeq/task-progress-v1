@@ -1,6 +1,5 @@
 @extends('layouts.app')
   
-<!-- @section('title', 'Project Task Progress') -->
 @section('contents')
 @if($unassigned->count()>0)
     @foreach($unassigned as $rs)
@@ -24,7 +23,7 @@
     @endforeach
 @endif
     <div class="d-flex align-items-center justify-content-between pb-5">
-        <h1 class="mb-0">Task Progress</h1>
+        <h3 class="mb-0"><b>Task Planning</b></h3>
         <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
         <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-primary">Update Project Task</a>
         <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-primary">Completed Project Task</a>
@@ -32,8 +31,9 @@
     <div class="d-flex align-items-center justify-content-between">
         <h6 class="mb-0">Task planning for the project: </h1>
         <select id="projectFilter" name="projectFilter" class="form-control" aria-label="Project Filter">
+            <option value="">Select Project</option>
             @foreach($project as $rs)
-                    <option value="{{ $rs->id }}">{{ $rs->project_name }}</option>
+                <option value="{{ $rs->id }}">{{ $rs->project_name }}</option>
             @endforeach
         </select>
     </div>
@@ -52,27 +52,36 @@
             </ul>
         </div>
     @endif
-    <form class="pb-5" action="{{ route('projecttaskprogress.store') }}" method="POST" enctype="multipart/form-data">
+        <div class="row mb-3">
+            <div class="col">
+                <b>OPTION 1 : Add New Project Tasks one by one</b>
+            </div>
+        </div>
+    <form class="pb-5" onsubmit="return validateInput(project_id.value)" action="{{ route('projecttaskprogress.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input value="{{$project['0']['id']}}" type="text" name="project_id" id="project_id" class="form-control" hidden>
+        <input value="" type="text" name="project_id" id="project_id" class="form-control" hidden>
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Project Sequence No. <b>(WBS)</b>: </label>
-                <input type="text" name="task_sequence_no_wbs" class="form-control" placeholder="Task Sequence No." required>
+                <input type="text" id="task_sequence_no_wbs" name="task_sequence_no_wbs" class="form-control" placeholder="Task Sequence No." required>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Project Task Name: </label>
-                <input type="text" name="task_name" class="form-control" placeholder="Task Name" required>
+                <input type="text" id="task_name" name="task_name" class="form-control" placeholder="Task Name" required>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Task Owner: </label>
-                <Select name="task_owner" class="form-control" required>
+                <Select id="task_owner" name="task_owner" class="form-control" required>
+                    <option value="">Select Task Owner</option>
+                @foreach($user->groupBy('id') as $rs=>$rs2)
+                    <option data-project="" value="{{$rs2->first()->id}}">{{$rs2->first()->user_name}} - {{$rs2->first()->name}}</option>
+                @endforeach
                 @foreach($user as $rs)
-                    <option value="{{ $rs->id }}">{{ $rs->name }}</option>
+                    <option data-project="{{$rs->project_id}}" value="{{$rs->id}}">{{$rs->user_name}} - {{$rs->name}}</option>
                 @endforeach
                 </Select>
             </div>
@@ -87,19 +96,18 @@
     <hr class="my-4 dotted border-5">
         <div class="row mb-3">
             <div class="col">
-                Add a Batch of New Project Tasks via the Excel Import
+                <b>OPTION 2 : Add a Batch of New Project Tasks via the Excel Import</b>
             </div>
         </div>
-    <form class="pb-5" action="{{ route('projecttaskprogress.importfromexcel') }}" method="POST" enctype="multipart/form-data">
+    <form class="pb-5" onsubmit="return validateInput(importfromexcelprojectid.value)" action="{{ route('projecttaskprogress.importfromexcel') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input value="{{$project['0']['id']}}" hidden id="importfromexcelprojectid" name="importfromexcelprojectid">
+        <input value="" hidden id="importfromexcelprojectid" name="importfromexcelprojectid">
         <input hidden name="user" value="{{auth()->user()->id}}">
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Project Name: </label>
             </div>
             <div class="col" id="importfromexcelprojectname" name="importfromexcelprojectname">
-                {{$project['0']['project_name']}}
             </div>
             <div class="col">
                 <input type="file" name="file" required>
@@ -132,20 +140,24 @@
                             </td>
                             <td class="align-middle">
                                 {{ $rs->task_sequence_no_wbs; }}
-                            </td>
+                            </td> 
                             <td class="align-middle">
                                 <input type="text" name="assigntaskname[{{ $loop->iteration-1 }}]" class="form-control" value="{{ $rs->task_name; }}">
                                 </input>
                             </td>
                             <td class="align-middle">
                                 <Select name="assigntaskowner[{{ $loop->iteration-1 }}]" class="form-control">
-                                <option value=""></option>
+                                <option value="{{$rs->user_login_name}}">
+                                    {{$rs->user_name}} - {{$rs->name}}
+                                </option>
                                 @foreach($user as $rsuser)
-                                    <option value="{{ $rsuser->id }}"
-                                    @if ($rsuser->id == $rs->user_login_name)
-                                    selected="selected"
+                                    @if($rsuser->project_id==$rs->project_id)
+                                        <option value="{{ $rsuser->id }}"
+                                            @if ($rsuser->id == $rs->user_login_name)
+                                                selected="selected"
+                                            @endif
+                                        >{{ $rsuser->user_name }} - {{ $rsuser->name }}</option>
                                     @endif
-                                    >{{ $rsuser->user_name }} - {{ $rsuser->name }}</option>
                                 @endforeach
                                 </Select>
                             </td>
@@ -166,7 +178,22 @@
         </div>
     </form>
 <script>    
+    function validateInput(str){
+        if(str==""){
+            alert("no project selected");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
     $(document).ready(function () {
+        var table = document.getElementById('data-table');
+        var rows = table.getElementsByTagName('tr');
+        // Loop through each <tr> element and log its content
+        for (var i = 1; i < rows.length; i++) {
+            rows[i].style.display='none';
+        }
         var elements = document.getElementsByName('dataDismiss');
         for (var i = 0; i < elements.length; i++) {
             elements[i].addEventListener('click', function() {
@@ -176,6 +203,14 @@
                     modals[j].style.display='none';
                 }
             });
+        }
+        var select = document.getElementById('task_owner');
+        var options = select.getElementsByTagName('option');
+        // Loop through each <tr> element and log its content
+        for (var i = 1; i < options.length; i++) {
+            if(options[i].getAttribute('data-project')!=''){
+                options[i].style.display='none';
+            }
         }
         $('#projectFilter').on('change', function() {
             var selectedProject = $(this).val();
@@ -190,14 +225,24 @@
 
             var table = document.getElementById('data-table');
             var rows = table.getElementsByTagName('tr');
-
             // Loop through each <tr> element and log its content
             for (var i = 1; i < rows.length; i++) {
-                if(rows[i].getAttribute('data-project')!=selectedProject){
+                if(rows[i].getAttribute('data-project')!=selectedProject&&selectedProject!=''){
                     rows[i].style.display='none';
                 }
                 else{
                     rows[i].style.display='table-row';
+                }
+            }
+            var select = document.getElementById('task_owner');
+            var options = select.getElementsByTagName('option');
+            // Loop through each <tr> element and log its content
+            for (var i = 1; i < options.length; i++) {
+                if(options[i].getAttribute('data-project')!=selectedProject&&selectedProject!=''){
+                    options[i].style.display='none';
+                }
+                else{
+                    options[i].style.display='inline';
                 }
             }
         });
