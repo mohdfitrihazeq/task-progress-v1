@@ -1,10 +1,8 @@
 @extends('layouts.app')
   
-<!-- @section('title', 'Task Planning') -->
-  
 @section('contents')
     <div class="d-flex align-items-center justify-content-between pb-5">
-        <h3 class="mb-0">Task Planning</h3>
+        <h3 class="mb-0"><b>Task Planning</b></h3>
         <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
         <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-primary">Update Project Task</a>
         <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-primary">Completed Project Task</a>
@@ -68,6 +66,12 @@
     </div>
 <script>    
     $(document).ready(function () {
+        var table = document.getElementById('data-table');
+        var rows = table.getElementsByTagName('tr');
+        // Loop through each <tr> element and log its content
+        for (var i = 1; i < rows.length; i++) {
+            rows[i].style.display='none';
+        }
         $('#projectFilter').on('change', function() {
             var selectedProject = $(this).val();
 

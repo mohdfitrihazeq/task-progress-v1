@@ -1,6 +1,5 @@
 @extends('layouts.app')
   
-<!-- @section('title', 'Task Planning') -->
 @section('contents')
 @if($unassigned->count()>0)
     @foreach($unassigned as $rs)
@@ -24,7 +23,7 @@
     @endforeach
 @endif
     <div class="d-flex align-items-center justify-content-between pb-5">
-        <h3 class="mb-0">Task Planning</h1>
+        <h3 class="mb-0"><b>Task Planning</b></h3>
         <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
         <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-primary">Update Project Task</a>
         <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-primary">Completed Project Task</a>
@@ -55,10 +54,10 @@
     @endif
         <div class="row mb-3">
             <div class="col">
-                <b>OPTION 1 : Add New Project tasks one by one</b>
+                <b>OPTION 1 : Add New Project Tasks one by one</b>
             </div>
         </div>
-    <form class="pb-5" action="{{ route('projecttaskprogress.store') }}" method="POST" enctype="multipart/form-data">
+    <form class="pb-5" onsubmit="return validateInput(project_id.value)" action="{{ route('projecttaskprogress.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input value="" type="text" name="project_id" id="project_id" class="form-control" hidden>
         <div class="row mb-3">
@@ -100,7 +99,7 @@
                 <b>OPTION 2 : Add a Batch of New Project Tasks via the Excel Import</b>
             </div>
         </div>
-    <form class="pb-5" action="{{ route('projecttaskprogress.importfromexcel') }}" method="POST" enctype="multipart/form-data">
+    <form class="pb-5" onsubmit="return validateInput(importfromexcelprojectid.value)" action="{{ route('projecttaskprogress.importfromexcel') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input value="" hidden id="importfromexcelprojectid" name="importfromexcelprojectid">
         <input hidden name="user" value="{{auth()->user()->id}}">
@@ -141,7 +140,7 @@
                             </td>
                             <td class="align-middle">
                                 {{ $rs->task_sequence_no_wbs; }}
-                            </td>
+                            </td> 
                             <td class="align-middle">
                                 <input type="text" name="assigntaskname[{{ $loop->iteration-1 }}]" class="form-control" value="{{ $rs->task_name; }}">
                                 </input>
@@ -179,7 +178,22 @@
         </div>
     </form>
 <script>    
+    function validateInput(str){
+        if(str==""){
+            alert("no project selected");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
     $(document).ready(function () {
+        var table = document.getElementById('data-table');
+        var rows = table.getElementsByTagName('tr');
+        // Loop through each <tr> element and log its content
+        for (var i = 1; i < rows.length; i++) {
+            rows[i].style.display='none';
+        }
         var elements = document.getElementsByName('dataDismiss');
         for (var i = 0; i < elements.length; i++) {
             elements[i].addEventListener('click', function() {

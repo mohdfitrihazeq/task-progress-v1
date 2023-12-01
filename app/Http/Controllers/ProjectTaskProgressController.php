@@ -23,6 +23,7 @@ class ProjectTaskProgressController extends Controller
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.user_login_name',
             // Include other selected columns here
             'projects.project_name',
             'users.user_name',
@@ -38,12 +39,14 @@ class ProjectTaskProgressController extends Controller
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.user_login_name',
             // Include other selected columns here
             'projects.project_name',
             'users.user_name',
             'users.name'
         )
-        ->orderByDesc('project_task_progress.id')
+        ->orderBy('project_task_progress.project_id','ASC')
+        ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
         $unassigned = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('user_login_name',null)->selectRaw('projects.id,projects.project_name,count(*) AS unassigned_count')->groupBy('projects.id','projects.project_name')->get();
         $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
@@ -58,6 +61,10 @@ class ProjectTaskProgressController extends Controller
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.last_update_bywhom',
+            'project_task_progress.task_actual_start_date',
+            'project_task_progress.task_actual_end_date',
+            'project_task_progress.task_progress_percentage',
             // Include other selected columns here
             'projects.project_name',
             'users.user_name',
@@ -74,12 +81,17 @@ class ProjectTaskProgressController extends Controller
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.last_update_bywhom',
+            'project_task_progress.task_actual_start_date',
+            'project_task_progress.task_actual_end_date',
+            'project_task_progress.task_progress_percentage',
             // Include other selected columns here
             'projects.project_name',
             'users.user_name',
             'users.name'
         )
-        ->orderByDesc('project_task_progress.id')
+        ->orderBy('project_task_progress.project_id','ASC')
+        ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
         $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
         return view('createupdateprojecttask', compact('projecttaskprogress','project'));
@@ -112,7 +124,8 @@ class ProjectTaskProgressController extends Controller
             'users.user_name',
             'users.name'
         )
-        ->orderByDesc('project_task_progress.id')
+        ->orderBy('project_task_progress.project_id','ASC')
+        ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
         $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
         return view('completedprojecttask', compact('projecttaskprogress','project'));
@@ -160,7 +173,6 @@ class ProjectTaskProgressController extends Controller
         $file = $request->file('file');
         $fileContents = file($file->getPathname());
         $project = $request->input('importfromexcelprojectid');
-        $projectname = Project::where('id',$project)->get()['0']['project_name'];
         $user = $request->input('user');
         foreach ($fileContents as $line) {
             $data['task_sequence_no_wbs'] = str_getcsv($line)['0'];
@@ -190,13 +202,15 @@ class ProjectTaskProgressController extends Controller
   
     public function assigntaskowner(Request $request)
     {
-        foreach($request->all()['assigntaskid'] as $key => $value){
-            $projecttaskprogress = ProjectTaskProgress::findOrFail($request->all()['assigntaskid'][$key]);
-            if($request->input("delete")!=null){
-                $projecttaskprogress->delete();
-            }
-            if($request->input("update")!=null){
-                $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => "'".\Carbon\Carbon::now().' - '.auth()->user()->name."'",]);
+        if(isset($request->all()['assigntaskid'])){
+            foreach($request->all()['assigntaskid'] as $key => $value){
+                $projecttaskprogress = ProjectTaskProgress::findOrFail($request->all()['assigntaskid'][$key]);
+                if($request->input("delete")!=null){
+                    $projecttaskprogress->delete();
+                }
+                if($request->input("update")!=null){
+                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => "'".\Carbon\Carbon::now().' - '.auth()->user()->name."'",]);
+                }
             }
         }
         return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress assigned successfully');
@@ -206,7 +220,24 @@ class ProjectTaskProgressController extends Controller
     {
         foreach($request->all()['update'] as $key => $value){
             $projecttaskprogress = ProjectTaskProgress::findOrFail($value);
-            $projecttaskprogress->update(['task_actual_start_date'=>$request->all()['start'][$key],'task_actual_end_date'=>$request->all()['end'][$key],'task_progress_percentage'=>$request->all()['progress'][$key],'last_update_bywhom'=>$request->all()['progress'][$key],'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,]);
+            if(isset($request->all()['start'][$key])){
+                $projecttaskprogress->update([
+                    'task_actual_start_date'=>$request->all()['start'][$key],
+                ]);
+            }
+            if(isset($request->all()['end'][$key])){
+                $projecttaskprogress->update([
+                    'task_actual_end_date'=>$request->all()['end'][$key],
+                ]);
+            }
+            if(isset($request->all()['progress'][$key])){
+                $projecttaskprogress->update([
+                    'task_progress_percentage'=>$request->all()['progress'][$key],
+                ]);
+            }
+            $projecttaskprogress->update([
+                'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,
+            ]);
         }
         return redirect()->route('projecttaskprogress.createupdateprojecttask')->with('success', 'project task progress updated successfully');
     }
