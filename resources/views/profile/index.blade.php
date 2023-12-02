@@ -50,7 +50,7 @@
                                 </td>
                                 <td class="align-middle">
                                     <a class="nav-link" href="{{ route('access.edit', $rs->id)}}">
-                                        <i class="fas fa-fw fa-cog"></i>
+                                        <i class="fa fa-plus-circle text success fa-3x"></i>
                                     <span>Add</span></a>
                                 </td>
                             </tr>
@@ -80,8 +80,10 @@
                             </td>
                             <td class="align-middle">
                                 <a class="nav-link" href="{{ route('access.edit', $rs->id)}}">
-                                    <i class="fas fa-fw fa-cog"></i>
-                                <span>Add</span></a>
+                                <div class="text-center">
+                                    <i class="fa fa-plus-circle text-primary fa-2x"></i>
+                                </div>
+                                <!-- <span>Add</span></a> -->
                             </td>
                         </tr>
                     @endif
