@@ -25,7 +25,7 @@
     <form>
         <table class="table table-hover" id="data-table">
             <thead class="table-primary">
-                <tr>
+                <tr id="data-table-header" class="data-table-header">
                     <th>Task Sequence No. (WBS)</th>
                     <th>Task Name</th>
                     <th>Actual Start Date</th>
@@ -88,22 +88,98 @@
                 }
             }
         });
-        $('#data-table').DataTable({
+        var table = $('#data-table').DataTable({
             dom: 'Bfrtip', // Add the export buttons to the DOM
             buttons: [
                 {
-                    extend: 'excel',
+                    extend: 'excelHtml5',
+                    text: 'wo header',
+                    header: false,
                     exportOptions: {
-                        columns: [0,1,2,3,4,5] // Include only the first column in the export
+                        columns: ':visible',
                     }
                 },
                 {
-                    extend: 'pdf',
+                    extend: 'excelHtml5',
+                    text: 'w header',
                     exportOptions: {
-                        columns: [0,1,2,3,4,5] // Include only the first column in the export
+                        columns: ':visible',
+                        rows: ":not('.data-table-header')",
                     }
-                }
-            ]
+                },
+                {
+                    text: 'USA Date Format',
+                    action: function ( e, dt, node, config ) {
+                        table.rows().every(function(){
+                            if(this.data()[2][4]=="-"){
+                                let date = new Date(this.data()[2]);
+                                let day = date.getDate().toString().padStart(2,"0");
+                                let month = date.getMonth()+1;
+                                let year = date.getFullYear();
+                                this.data()[2]=month+"/"+day+"/"+year;
+                                date = new Date(this.data()[3]);
+                                day = date.getDate().toString().padStart(2,"0");
+                                month = date.getMonth()+1;
+                                year = date.getFullYear();
+                                this.data()[2]=month+"/"+day+"/"+year;
+                            }
+                            else{
+                                let date = new Date(this.data()[2]);
+                                let day = date.getDate().toString().padStart(2,"0");
+                                let month = date.getMonth()+1;
+                                let year = date.getFullYear();
+                                this.data()[2]=year+"-"+month+"-"+day;
+                                date = new Date(this.data()[3]);
+                                day = date.getDate().toString().padStart(2,"0");
+                                month = date.getMonth()+1;
+                                year = date.getFullYear();
+                                this.data()[3]=year+"-"+month+"-"+day;
+                            }
+                        });
+                        var htmltable = document.getElementById('data-table');
+                        var htmlrows = htmltable.getElementsByTagName('tr');
+
+                        // Loop through each <tr> element and log its content
+                        for (var i = 1; i < htmlrows.length; i++) {
+                            if(htmlrows[i].getElementsByTagName("td")[2].innerHTML[4]=="-"){
+                                let htmldate = new Date(htmlrows[i].getElementsByTagName("td")[2].innerHTML);
+                                let htmlday = htmldate.getDate().toString().padStart(2,"0");
+                                let htmlmonth = htmldate.getMonth()+1;
+                                let htmlyear = htmldate.getFullYear();
+                                htmlrows[i].getElementsByTagName("td")[2].innerHTML=htmlmonth+"/"+htmlday+"/"+htmlyear;
+                                htmldate = new Date(htmlrows[i].getElementsByTagName("td")[2].innerHTML);
+                                htmlday = htmldate.getDate().toString().padStart(2,"0");
+                                htmlmonth = htmldate.getMonth()+1;
+                                htmlyear = htmldate.getFullYear();
+                                htmlrows[i].getElementsByTagName("td")[3].innerHTML=htmlmonth+"/"+htmlday+"/"+htmlyear;
+                            }
+                            else{
+                                let htmldate = new Date(htmlrows[i].getElementsByTagName("td")[2].innerHTML);
+                                let htmlday = htmldate.getDate().toString().padStart(2,"0");
+                                let htmlmonth = htmldate.getMonth()+1;
+                                let htmlyear = htmldate.getFullYear();
+                                htmlrows[i].getElementsByTagName("td")[2].innerHTML=htmlyear+"-"+htmlmonth+"-"+htmlday;
+                                htmldate = new Date(htmlrows[i].getElementsByTagName("td")[2].innerHTML);
+                                htmlday = htmldate.getDate().toString().padStart(2,"0");
+                                htmlmonth = htmldate.getMonth()+1;
+                                htmlyear = htmldate.getFullYear();
+                                htmlrows[i].getElementsByTagName("td")[3].innerHTML=htmlyear+"-"+htmlmonth+"-"+htmlday;
+                            }
+                        }
+                    }
+                },
+                {
+                    text: 'Project column included in Excel',
+                    action: function ( e, dt, node, config ) {
+                        if(table.columns( [5] ).visible()[0]==true){
+                            table.columns( [5] ).visible( false );
+                        }
+                        else{
+                            table.columns( [5] ).visible( true );
+                        }
+                    }
+                },
+            ],
         });
     });
 </script>

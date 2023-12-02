@@ -51,6 +51,7 @@
                             </td>
                             <td class="align-middle">
                                 <input type="date" name="end[{{$loop->iteration-1}}]" value="{{ $rs->task_actual_end_date }}">
+                                <input id="datepicker" name="datepicker" class="datepicker"></input>
                             </td>
                             <td class="align-middle">
                                 <input type="number" min="{{$rs->task_progress_percentage}}" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}">
@@ -101,3 +102,10 @@
     });
 </script>
 @endsection
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript">
+    $("#datepicker").datepicker();
+    </script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+        <script>
+</script>
