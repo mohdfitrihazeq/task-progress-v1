@@ -35,7 +35,6 @@
                     <th>Task Name</th>
                     <th>Actual Start Date</th>
                     <th>Actual End Date</th>
-                    <th>Task Progress %</th>
                     <th hidden>Project</th>
                     <th hidden>Project ID</th>
                 </tr>
@@ -48,7 +47,6 @@
                             <td class="align-middle">{{ $rs->task_name }}</td>
                             <td class="align-middle">{{ $rs->task_actual_start_date }}</td>
                             <td class="align-middle">{{ $rs->task_actual_end_date }}</td>
-                            <td class="align-middle">{{ $rs->task_progress_percentage }}</td>
                             <td class="align-middle" hidden>{{ $rs->project_name }}</td>
                             <td class="align-middle" hidden>{{ $rs->project_id }}</td>
                         </tr>
@@ -87,23 +85,23 @@ function fnExcelReport() {
 
     if(includeHeader=="enabled"){
         var header = tab.rows[0].getElementsByTagName("th");
-        for (l = 0; l < 5; l++) {
+        for (l = 0; l < 4; l++) {
             tab_text = tab_text + header[l].outerHTML;
         }
         if(includeProject=="enabled"){
-            tab_text = tab_text + header[5].outerHTML;
+            tab_text = tab_text + header[4].outerHTML;
         }
         tab_text = tab_text + "</tr><tr>";
     }
     for (j = 1; j < tab.rows.length; j++) {
         var data = tab.rows[j].getElementsByTagName("td");
         for (k = 0; k < 2; k++) {
-            if(data[6].innerHTML==projectFilter||projectFilter==""){
+            if(data[5].innerHTML==projectFilter||projectFilter==""){
                 tab_text = tab_text + data[k].outerHTML;
             }
         }
         for (k = 2; k < 4; k++) {
-            if(data[6].innerHTML==projectFilter||projectFilter==""){
+            if(data[5].innerHTML==projectFilter||projectFilter==""){
                 if(dateFormat=="uk"){
                     tab_text = tab_text + "<td style='mso-number-format:" + "yyyy-mm-dd" + "'>" + data[k].innerHTML + "</td>";
                 }
@@ -112,11 +110,8 @@ function fnExcelReport() {
                 }
             }
         }
-        if(data[6].innerHTML==projectFilter||projectFilter==""){
+        if((data[5].innerHTML==projectFilter||projectFilter=="")&&includeProject=="enabled"){
             tab_text = tab_text + data[4].outerHTML;
-        }
-        if((data[6].innerHTML==projectFilter||projectFilter=="")&&includeProject=="enabled"){
-            tab_text = tab_text + data[5].outerHTML;
         }
         tab_text = tab_text + "</tr>";
         //tab_text=tab_text+"</tr>";
