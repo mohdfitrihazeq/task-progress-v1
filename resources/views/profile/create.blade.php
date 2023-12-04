@@ -101,14 +101,14 @@
             var companyOptions = companyDropdown.options;
 
             if (roleSelect.value === 'Master Super Admin - MSA') {
-                // Hide options other than 'Metrio' for MSA
+                // Hide options other than 'METRIO' for MSA
                 for (var i = 0; i < companyOptions.length; i++) {
                     var option = companyOptions[i];
                     if (i === 0) {
                         // Hide the first option
                         option.style.display = 'none';
                     } else {
-                        option.style.display = (option.text !== 'METRIO') ? 'none' : 'block';
+                        option.style.display = (option.text.toUpperCase() !== 'METRIO') ? 'none' : 'block';
                     }
                 }
             } else {
@@ -123,6 +123,7 @@
         // Initial setup when the page loads
         updateCompanyDropdown();
     });
+
 </script>
 
 
