@@ -55,7 +55,7 @@ class UserProfileController extends Controller
     {
        // Validate the request data
        $validator = Validator::make($request->all(), [
-        'user_name' => 'required',
+        'user_name' => 'required|unique:users',
         'name' => 'required',
         'email' => [
             'required',
@@ -76,8 +76,8 @@ class UserProfileController extends Controller
         //     return !User::where('email', $input['email'])->exists();
         // });
 
-        $validator->sometimes('name', 'unique:users', function ($input) {
-            return !User::where('name', $input['name'])->exists();
+        $validator->sometimes('user_name', 'unique:users', function ($input) {
+            return !User::where('user_name', $input['user_name'])->exists();
         });
 
         // Check if validation fails
