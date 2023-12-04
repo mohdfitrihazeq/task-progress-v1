@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app2')
 @section('contents')
     <div class="d-flex align-items-center justify-content-between pb-5">
         <h3 class="mb-0"><b>Task Planning</b></h3>
