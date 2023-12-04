@@ -1,6 +1,6 @@
 @extends('layouts.app')
   
-@section('title', 'Add User Project Access')
+@section('title', 'Add User Project Accessible List')
   
 @section('contents')
     <!-- <h1 class="mb-0">Edit profile</h1> -->
@@ -62,7 +62,14 @@
                 @foreach($user_accessible as $rs)
                     <tr>
                         <td class="align-middle">{{ $loop->iteration }}</td>
-                        <td class="align-middle">{{ $rs->project->project_name }}</td>
+                        <td class="align-middle">
+                            @if ($rs->project)
+                                {{ $rs->project->project_name }}
+                            @else
+                                <!-- Handle the case where $rs->project is null -->
+                                No Project Assigned
+                            @endif
+                        </td>
                         <td class="align-middle">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <form action="{{ route('access.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure to Delete?')">

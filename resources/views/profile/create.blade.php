@@ -22,10 +22,10 @@
                 <label class="form-label">Email</label>
                 <input type="text" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" id="roleSelect">
                 <!-- <input type="text" name="role_name" class="form-control" placeholder="Role" required> -->
                 <label class="form-label">Role</label>
-                <select class="form-control" name="role_name" placeholder="Role">
+                <select class="form-control" name="role_name" placeholder="Role" id="role_name">
                     @foreach ($roles as $role)
                         @if(Auth::user()->role_name == 'Master Super Admin - MSA' || $role->role_name != 'Master Super Admin - MSA')
                         <option value="{{ $role->role_name }}" {{ old('role_name') == $role->role_name ? 'selected' : '' }}>{{ $role->role_name }}</option>
@@ -45,16 +45,18 @@
                 @enderror
             </div>
             @if(Auth::user()->role_name == 'Master Super Admin - MSA')
-                <div class="col-md-6">
+                <div class="col-md-6" id="companyField">
                     <label class="form-label">Company</label>
-                    <select class="form-control" name="company_id" placeholder="Company">
+                    <select class="form-control" name="company_id" placeholder="Company" id="company_id" required>
+                        <option value="" disabled selected>Select Company</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->company_id }}" {{ old('company_id') == $company->company_id ? 'selected' : '' }}>{{ $company->company_name }}</option>
+                            <option value="{{ $company->company_id }}" data-original-text="{{ $company->company_name }}" {{ old('company_id') == $company->company_id ? 'selected' : '' }}>{{ $company->company_name }}</option>
                         @endforeach
                     </select>
                 </div>
             @endif
         </div>
+
         @if($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -82,6 +84,50 @@
         }
     }
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initial setup
+        updateCompanyDropdown();
+
+        // Event listener for role change
+        document.getElementById('role_name').addEventListener('change', function () {
+            updateCompanyDropdown();
+        });
+
+        // Function to update company dropdown based on role
+        function updateCompanyDropdown() {
+            var roleSelect = document.getElementById('role_name');
+            var companyDropdown = document.getElementById('company_id');
+            var companyOptions = companyDropdown.options;
+
+            if (roleSelect.value === 'Master Super Admin - MSA') {
+                // Hide options other than 'Metrio' for MSA
+                for (var i = 0; i < companyOptions.length; i++) {
+                    var option = companyOptions[i];
+                    if (i === 0) {
+                        // Hide the first option
+                        option.style.display = 'none';
+                    } else {
+                        option.style.display = (option.text !== 'Metrio') ? 'none' : 'block';
+                    }
+                }
+            } else {
+                // Show all companies for other roles
+                for (var i = 0; i < companyOptions.length; i++) {
+                    var option = companyOptions[i];
+                    option.style.display = 'block';
+                }
+            }
+        }
+
+        // Initial setup when the page loads
+        updateCompanyDropdown();
+    });
+</script>
+
+
+
+
 @endsection
 
  <!-- <div class="col">

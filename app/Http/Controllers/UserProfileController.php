@@ -42,22 +42,13 @@ class UserProfileController extends Controller
     {
         $user = Auth::user();
         $companies = [];
-
-        // Check if the user has a company
-        if ($user->company) {
-            // If the user is MSA, get the company based on the user's company_id
-            if ($user->role_name == 'Master Super Admin - MSA') {
-                $companies = Company::where('company_id', $user->company_id)->get();
-            } else {
-                // If the user is not MSA, get all companies
-                $companies = Company::all();
-            }
-        }
-
+    
+        $companies = Company::all();
         $roles = Role::all();
         
         return view('profile.create', compact('companies', 'roles'));
     }
+    
 
 
     public function store(Request $request)

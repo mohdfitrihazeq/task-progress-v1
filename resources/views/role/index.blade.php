@@ -1,7 +1,5 @@
 @extends('layouts.app')
   
-<!-- @section('title', 'Role') -->
-  
 @section('contents')
     <div class="d-flex align-items-center justify-content-between">
         <h1 class="mb-0">CRUD Role</h1>

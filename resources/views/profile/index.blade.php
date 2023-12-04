@@ -23,7 +23,7 @@
                 <th>Email</th>
                 <th>Role</th>
                 <th>Action</th>
-                <th>Project Accessible List</th>
+                <th>User Project Accessible List</th>
             </tr>
         </thead>
         <tbody>
@@ -50,8 +50,9 @@
                                 </td>
                                 <td class="align-middle">
                                     <a class="nav-link" href="{{ route('access.edit', $rs->id)}}">
-                                        <i class="fa fa-plus-circle text success fa-3x"></i>
-                                    <span>Add</span></a>
+                                    <div class="text-center">
+                                        <i class="fa fa-plus-circle text-primary fa-2x"></i>
+                                    </div>
                                 </td>
                             </tr>
                         @endif
