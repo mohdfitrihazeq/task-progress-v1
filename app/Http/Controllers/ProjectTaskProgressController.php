@@ -225,15 +225,17 @@ class ProjectTaskProgressController extends Controller
     public function updateprojecttask(Request $request)
     {
         foreach($request->all()['update'] as $key => $value){
+            $start=substr($request->all()['start'][$key],6,4)."-".substr($request->all()['start'][$key],3,2)."-".substr($request->all()['start'][$key],0,2);
+            $end=substr($request->all()['end'][$key],6,4)."-".substr($request->all()['end'][$key],3,2)."-".substr($request->all()['end'][$key],0,2);
             $projecttaskprogress = ProjectTaskProgress::findOrFail($value);
             if(isset($request->all()['start'][$key])){
                 $projecttaskprogress->update([
-                    'task_actual_start_date'=>$request->all()['start'][$key],
+                    'task_actual_start_date'=>$start,
                 ]);
             }
             if(isset($request->all()['end'][$key])){
                 $projecttaskprogress->update([
-                    'task_actual_end_date'=>$request->all()['end'][$key],
+                    'task_actual_end_date'=>$end,
                 ]);
             }
             if(isset($request->all()['progress'][$key])){
