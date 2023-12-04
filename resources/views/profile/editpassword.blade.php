@@ -34,6 +34,8 @@
           The password should at least be a mix of a lower case ( e.g. a, d), upper case 
           character (e.g. B, F),  number (e.g. 2, 3) and symbol (e.g. &, @)
       </div>
+      <div class="offset-sm-3 col-sm-6">
       <button type="submit" class="btn btn-primary btn-user btn-block">Change Password</button>
+      </div>
     </form>
 @endsection

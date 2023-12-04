@@ -22,11 +22,6 @@
             {{ Session::get('success') }}
         </div>
     @endif
-    @if($projecttaskprogress->count() > 0)
-        @foreach($projecttaskprogress as $rs)
-            <input hidden name="exportrow" data-project="{{ $rs->project_id }}" value="{{ '<tr><td>'.$rs->task_sequence_no_wbs.'</td></tr>' }}">
-        @endforeach
-    @endif
     <form>
         <table class="table table-hover" id="data-table">
             <thead class="table-primary">
@@ -45,8 +40,8 @@
                         <tr data-project="{{ $rs->project_id }}">
                             <td class="align-middle">{{ $rs->task_sequence_no_wbs }}</td>
                             <td class="align-middle">{{ $rs->task_name }}</td>
-                            <td class="align-middle">{{ $rs->task_actual_start_date }}</td>
-                            <td class="align-middle">{{ $rs->task_actual_end_date }}</td>
+                            <td class="align-middle">{{ substr($rs->task_actual_start_date,8,2)."-".substr($rs->task_actual_start_date,5,2)."-".substr($rs->task_actual_start_date,0,4) }}</td>
+                            <td class="align-middle">{{ substr($rs->task_actual_end_date,8,2)."-".substr($rs->task_actual_end_date,5,2)."-".substr($rs->task_actual_end_date,0,4) }}</td>
                             <td class="align-middle" hidden>{{ $rs->project_name }}</td>
                             <td class="align-middle" hidden>{{ $rs->project_id }}</td>
                         </tr>
@@ -103,18 +98,19 @@ function fnExcelReport() {
         for (k = 2; k < 4; k++) {
             if(data[5].innerHTML==projectFilter||projectFilter==""){
                 if(dateFormat=="uk"){
-                    tab_text = tab_text + "<td style='mso-number-format:" + "yyyy-mm-dd" + "'>" + data[k].innerHTML + "</td>";
+                    tab_text = tab_text + "<td style='mso-number-format:" + "dd-mm-yyyy" + "'>" + data[k].innerHTML.substring(6,10) + "-" + data[k].innerHTML.substring(3,5) + "-" + data[k].innerHTML.substring(0,2) + "</td>";
                 }
                 else{
-                    tab_text = tab_text + "<td style='mso-number-format:" + "mm/dd/yyyy" + "'>" + data[k].innerHTML + "</td>";
+                    tab_text = tab_text + "<td style='mso-number-format:" + "mm/dd/yyyy" + "'>" + data[k].innerHTML.substring(0,2) + "/" + data[k].innerHTML.substring(3,5) + "/" + data[k].innerHTML.substring(6,10) + "</td>";
                 }
             }
         }
         if((data[5].innerHTML==projectFilter||projectFilter=="")&&includeProject=="enabled"){
             tab_text = tab_text + data[4].outerHTML;
         }
-        tab_text = tab_text + "</tr>";
-        //tab_text=tab_text+"</tr>";
+        if(data[5].innerHTML==projectFilter||projectFilter==""){
+            tab_text = tab_text + "</tr>";
+        }
     }
 
     tab_text = tab_text + "</table>";
