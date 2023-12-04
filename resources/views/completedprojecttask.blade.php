@@ -25,13 +25,13 @@
     <form>
         <table class="table table-hover" id="data-table">
             <thead class="table-primary">
-                <tr>
+                <tr id="data-table-header" class="data-table-header">
                     <th>Task Sequence No. (WBS)</th>
                     <th>Task Name</th>
                     <th>Actual Start Date</th>
                     <th>Actual End Date</th>
-                    <th>Task Progress %</th>
-                    <th>Project</th>
+                    <th hidden>Project</th>
+                    <th hidden>Project ID</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,10 +40,10 @@
                         <tr data-project="{{ $rs->project_id }}">
                             <td class="align-middle">{{ $rs->task_sequence_no_wbs }}</td>
                             <td class="align-middle">{{ $rs->task_name }}</td>
-                            <td class="align-middle">{{ $rs->task_actual_start_date }}</td>
-                            <td class="align-middle">{{ $rs->task_actual_end_date }}</td>
-                            <td class="align-middle">{{ $rs->task_progress_percentage }}</td>
-                            <td class="align-middle">{{ $rs->project_name }}</td>
+                            <td class="align-middle">{{ substr($rs->task_actual_start_date,8,2)."-".substr($rs->task_actual_start_date,5,2)."-".substr($rs->task_actual_start_date,0,4) }}</td>
+                            <td class="align-middle">{{ substr($rs->task_actual_end_date,8,2)."-".substr($rs->task_actual_end_date,5,2)."-".substr($rs->task_actual_end_date,0,4) }}</td>
+                            <td class="align-middle" hidden>{{ $rs->project_name }}</td>
+                            <td class="align-middle" hidden>{{ $rs->project_id }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -53,8 +53,12 @@
                 @endif
             </tbody>
         </table>
+        <input hidden id="includeheader" value="disabled">
+        <input hidden id="includeproject" value="disabled">
+        <input hidden id="dateformat" value="uk">
     </form>
-
+    <button id="btnExport" onclick="fnExcelReport();"> EXPORT </button>
+    <iframe id="txtArea1" style="display:none"></iframe>
     <script src="{{asset('admin_assets/js/completedprojecttask.js')}}"></script>
     <div class="d-flex align-items-center justify-content-between bg-primary p-2 text-white">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16" id="usadateformat" name="usadateformat" onclick="usaDateFormat() "><path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>
@@ -65,6 +69,72 @@
         Project column included in Excel
     </div>
 <script>    
+function fnExcelReport() {
+    var tab_text = "<table border='2px'><tr>";
+    var j = 0;
+    var tab = document.getElementById('data-table'); // id of table
+    var projectFilter = document.getElementById('projectFilter').value; 
+    var includeHeader = document.getElementById('includeheader').value;
+    var includeProject = document.getElementById('includeproject').value;
+    var dateFormat = document.getElementById('dateformat').value;
+
+    if(includeHeader=="enabled"){
+        var header = tab.rows[0].getElementsByTagName("th");
+        for (l = 0; l < 4; l++) {
+            tab_text = tab_text + header[l].outerHTML;
+        }
+        if(includeProject=="enabled"){
+            tab_text = tab_text + header[4].outerHTML;
+        }
+        tab_text = tab_text + "</tr><tr>";
+    }
+    for (j = 1; j < tab.rows.length; j++) {
+        var data = tab.rows[j].getElementsByTagName("td");
+        for (k = 0; k < 2; k++) {
+            if(data[5].innerHTML==projectFilter||projectFilter==""){
+                tab_text = tab_text + data[k].outerHTML;
+            }
+        }
+        for (k = 2; k < 4; k++) {
+            if(data[5].innerHTML==projectFilter||projectFilter==""){
+                if(dateFormat=="uk"){
+                    tab_text = tab_text + "<td style='mso-number-format:" + "dd-mm-yyyy" + "'>" + data[k].innerHTML.substring(6,10) + "-" + data[k].innerHTML.substring(3,5) + "-" + data[k].innerHTML.substring(0,2) + "</td>";
+                }
+                else{
+                    tab_text = tab_text + "<td style='mso-number-format:" + "mm/dd/yyyy" + "'>" + data[k].innerHTML.substring(0,2) + "/" + data[k].innerHTML.substring(3,5) + "/" + data[k].innerHTML.substring(6,10) + "</td>";
+                }
+            }
+        }
+        if((data[5].innerHTML==projectFilter||projectFilter=="")&&includeProject=="enabled"){
+            tab_text = tab_text + data[4].outerHTML;
+        }
+        if(data[5].innerHTML==projectFilter||projectFilter==""){
+            tab_text = tab_text + "</tr>";
+        }
+    }
+
+    tab_text = tab_text + "</table>";
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+    var msie = window.navigator.userAgent.indexOf("MSIE ");
+
+    // If Internet Explorer
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+        txtArea1.document.open("txt/html", "replace");
+        txtArea1.document.write(tab_text);
+        txtArea1.document.close();
+        txtArea1.focus();
+
+        sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+    } else {
+        // other browser not tested on IE 11
+        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+    }
+
+    return sa;
+}
     $(document).ready(function () {
         var table = document.getElementById('data-table');
         var rows = table.getElementsByTagName('tr');
@@ -87,23 +157,6 @@
                     rows[i].style.display='table-row';
                 }
             }
-        });
-        $('#data-table').DataTable({
-            dom: 'Bfrtip', // Add the export buttons to the DOM
-            buttons: [
-                {
-                    extend: 'excel',
-                    exportOptions: {
-                        columns: [0,1,2,3,4,5] // Include only the first column in the export
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    exportOptions: {
-                        columns: [0,1,2,3,4,5] // Include only the first column in the export
-                    }
-                }
-            ]
         });
     });
 </script>

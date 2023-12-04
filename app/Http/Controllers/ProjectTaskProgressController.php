@@ -104,6 +104,9 @@ class ProjectTaskProgressController extends Controller
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.task_actual_start_date',
+            'project_task_progress.task_actual_end_date',
+            'project_task_progress.task_progress_percentage',
             // Include other selected columns here
             'projects.project_name',
             'users.user_name',
@@ -119,6 +122,9 @@ class ProjectTaskProgressController extends Controller
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.task_actual_start_date',
+            'project_task_progress.task_actual_end_date',
+            'project_task_progress.task_progress_percentage',
             // Include other selected columns here
             'projects.project_name',
             'users.user_name',
@@ -209,7 +215,7 @@ class ProjectTaskProgressController extends Controller
                     $projecttaskprogress->delete();
                 }
                 if($request->input("update")!=null){
-                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => "'".\Carbon\Carbon::now().' - '.auth()->user()->name."'",]);
+                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,]);
                 }
             }
         }
@@ -219,15 +225,17 @@ class ProjectTaskProgressController extends Controller
     public function updateprojecttask(Request $request)
     {
         foreach($request->all()['update'] as $key => $value){
+            $start=substr($request->all()['start'][$key],6,4)."-".substr($request->all()['start'][$key],3,2)."-".substr($request->all()['start'][$key],0,2);
+            $end=substr($request->all()['end'][$key],6,4)."-".substr($request->all()['end'][$key],3,2)."-".substr($request->all()['end'][$key],0,2);
             $projecttaskprogress = ProjectTaskProgress::findOrFail($value);
             if(isset($request->all()['start'][$key])){
                 $projecttaskprogress->update([
-                    'task_actual_start_date'=>$request->all()['start'][$key],
+                    'task_actual_start_date'=>$start,
                 ]);
             }
             if(isset($request->all()['end'][$key])){
                 $projecttaskprogress->update([
-                    'task_actual_end_date'=>$request->all()['end'][$key],
+                    'task_actual_end_date'=>$end,
                 ]);
             }
             if(isset($request->all()['progress'][$key])){

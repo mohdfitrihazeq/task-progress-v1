@@ -1,4 +1,4 @@
-GNU nano 5.8                                                 firstloginmail.blade.php                                                           
+                                                   
 <!DOCTYPE html>
 <html>
 <head>
