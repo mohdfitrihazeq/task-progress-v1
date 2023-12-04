@@ -104,7 +104,7 @@ class UserProfileController extends Controller
             'user_name' => $request->user_name,
             'name' => $request->name,
         ];
-        // Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
+        Mail::to($userEmail, $userName)->send(new FirstLoginMail($emailData));
         // Create a new user
         if (\Auth::user()->role_name == 'Master Super Admin - MSA') {
             $user = new User([

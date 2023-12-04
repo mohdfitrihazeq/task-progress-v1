@@ -244,7 +244,7 @@ class ProjectTaskProgressController extends Controller
                 ]);
             }
             $projecttaskprogress->update([
-                'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,
+                'last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,
             ]);
         }
         return redirect()->route('projecttaskprogress.createupdateprojecttask')->with('success', 'project task progress updated successfully');
