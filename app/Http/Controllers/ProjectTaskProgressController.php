@@ -215,7 +215,7 @@ class ProjectTaskProgressController extends Controller
                     $projecttaskprogress->delete();
                 }
                 if($request->input("update")!=null){
-                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => "'".\Carbon\Carbon::now().' - '.auth()->user()->name."'",]);
+                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,]);
                 }
             }
         }

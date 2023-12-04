@@ -46,10 +46,10 @@
                                 {{ $rs->task_name }}
                             </td>
                             <td class="align-middle">
-                                <input type="text" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}"></input>
+                                <input type="text" onkeydown="return false" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}"></input>
                             </td>
                             <td class="align-middle">
-                                <input type="text" class="datepicker" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}"></input>
+                                <input type="text" onkeydown="return false" class="datepicker" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}"></input>
                             </td>
                             <td class="align-middle">
                                 <input type="number" min="{{$rs->task_progress_percentage}}" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}">
@@ -101,18 +101,20 @@
 </script>
 <script>
     $(".datepicker").datepicker({
-        dateFormat: "yy-mm-dd",
+        dateFormat: "dd-mm-yy",
         minDate: "-2d",
+        maxDate: "+0d",
     });
     $(document).ready(function() {
         var picker = document.getElementsByClassName("datepicker");
         for ( i = 0 ; i < picker.length ; i++ ){
             if(picker[i].getAttribute("data-date")!=""){
-                picker[i].value = picker[i].getAttribute("data-date");
+                var date = new Date(picker[i].getAttribute("data-date"));
+                picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
             }
             else{
                 var date = new Date();
-                picker[i].value = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate().toString().padStart(2,"0");
+                picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
             }
         }
     });
