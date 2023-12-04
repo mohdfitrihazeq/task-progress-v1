@@ -108,7 +108,7 @@
                         // Hide the first option
                         option.style.display = 'none';
                     } else {
-                        option.style.display = (option.text !== 'Metrio') ? 'none' : 'block';
+                        option.style.display = (option.text !== 'METRIO') ? 'none' : 'block';
                     }
                 }
             } else {
