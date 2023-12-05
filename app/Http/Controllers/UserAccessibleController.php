@@ -88,11 +88,11 @@ class UserAccessibleController extends Controller
                 // If the user is not MSA, get projects associated with the user's company_id
                 $companyProjects = Project::join('project_company', 'projects.id', '=', 'project_company.project_id')
                 ->where('project_company.company_id', $user->company_id)
-                ->orderBy('project_company.company_id','DESC')
+                ->orderBy('projects.project_name', 'ASC')
                 ->get();
 
                 $projects = $companyProjects;
-                $projectIds = $projects->pluck('project_id')->toArray();
+                $projectIds = $projects->pluck('id')->toArray();
                 // dd($projects);
 
             // }
