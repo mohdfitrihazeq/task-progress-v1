@@ -101,9 +101,22 @@ class UserAccessibleController extends Controller
         // dd($profile);
         // $user_accessible = UserAccessible::all();
          // Retrieve UserAccessible records based on user_name
-        $user_accessible = UserAccessible::where('user_name', $profile->user_name)->get();
+        // $user_accessible = UserAccessible::where('user_name', $profile->user_name)->get();
 
-        // dd($projects);
+        // Retrieve UserAccessible records based on user_name and order by project_name
+        // $user_accessible = UserAccessible::leftJoin('projects', 'user_accessibles.project_id', '=', 'projects.id')
+        // ->where('user_accessibles.user_name', $profile->user_name)
+        // ->orderBy('projects.project_name', 'ASC')
+        // ->get();
+
+
+        $user_accessible = UserAccessible::select('user_accessibles.id as user_accessible_id', 'projects.id as project_id', 'projects.project_name')
+        ->leftJoin('projects', 'user_accessibles.project_id', '=', 'projects.id')
+        ->where('user_accessibles.user_name', $profile->user_name)
+        ->orderBy('projects.project_name', 'ASC')
+        ->get();
+
+        // dd($user_accessible);
         // $roles = Role::all();  // Retrieve all roles or adjust as needed
         // $companies = Company::all();  // Retrieve all roles or adjust as needed
 
@@ -169,7 +182,7 @@ class UserAccessibleController extends Controller
     {
         $user_accessible = UserAccessible::findOrFail($id);
         $user_name = $user_accessible->user_name;
-    
+        // dd($user_accessible);
         // Delete the user_accessible record
         $user_accessible->delete();
     
