@@ -1,5 +1,5 @@
 @extends('layouts.app')
-  
+<script src="{{asset('admin_assets/js/createnewprojecttaskname.js')}}"></script>
 @section('contents')
 @if($unassigned->count()>0)
     @foreach($unassigned as $rs)
@@ -33,7 +33,11 @@
         <select id="projectFilter" name="projectFilter" class="form-control" aria-label="Project Filter">
             <option value="">Select Project</option>
             @foreach($project as $rs)
-                <option value="{{ $rs->id }}">{{ $rs->project_name }}</option>
+                <option value="{{ $rs->id }}" 
+                @if($rs->id==session('previousProject'))
+                    selected="selected"
+                @endif
+                >{{ $rs->project_name }}</option>
             @endforeach
         </select>
     </div>
@@ -59,7 +63,11 @@
         </div>
     <form class="pb-5" onsubmit="return validateInput(project_id.value)" action="{{ route('projecttaskprogress.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input value="" type="text" name="project_id" id="project_id" class="form-control" hidden>
+        <input type="text" name="project_id" id="project_id" class="form-control"
+            @if(Session::has('previousProject'))
+                value="{{session('previousProject')}}"
+            @endif
+        hidden>
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Project Sequence No. <b>(WBS)</b>: </label>
@@ -101,13 +109,24 @@
         </div>
     <form class="pb-5" onsubmit="return validateInput(importfromexcelprojectid.value)" action="{{ route('projecttaskprogress.importfromexcel') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input value="" hidden id="importfromexcelprojectid" name="importfromexcelprojectid">
+        <input
+            @if(Session::has('previousProject'))
+                value="{{session('previousProject')}}"
+            @endif
+        hidden id="importfromexcelprojectid" name="importfromexcelprojectid">
         <input hidden name="user" value="{{auth()->user()->id}}">
         <div class="row mb-3">
             <div class="col">
                 <label class="form-label">Project Name: </label>
             </div>
             <div class="col" id="importfromexcelprojectname" name="importfromexcelprojectname">
+                @if(Session::has('previousProject'))
+                    @foreach($project as $rs)
+                        @if($rs->id==session('previousProject'))
+                            {{$rs->project_name}}
+                        @endif
+                    @endforeach
+                @endif
             </div>
             <div class="col">
                 <input type="file" name="file" required>
@@ -121,6 +140,11 @@
     </form>
     <form action="{{ route('projecttaskprogress.assigntaskowner') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <input
+            @if(Session::has('previousProject'))
+                value="{{session('previousProject')}}"
+            @endif
+        hidden id="assignproject" name="assignproject">
         <table class="table table-hover" id="data-table">
             <thead class="table-primary">
                 <tr>
@@ -170,6 +194,16 @@
                 @endif
             </tbody>
         </table>
+        <table class="table table-hover">
+            <tr>
+                <td class="align-middle">
+                    <input type="checkbox" class="form-control" id="checkall" onclick="checkAll()">
+                </td>
+                <td width="95%" class="align-middle">
+                    Check All
+                </td>
+            </tr>
+        </table>
         <div class="row">
             <div class="d-grid">
                 <button type="submit" name="update" value="update" class="btn btn-primary">Update Selected</button>
@@ -192,7 +226,9 @@
         var rows = table.getElementsByTagName('tr');
         // Loop through each <tr> element and log its content
         for (var i = 1; i < rows.length; i++) {
-            rows[i].style.display='none';
+            if(rows[i].getAttribute('data-project')!="{{session('previousProject')}}"){
+                rows[i].style.display='none';
+            }
         }
         var elements = document.getElementsByName('dataDismiss');
         for (var i = 0; i < elements.length; i++) {

@@ -167,11 +167,11 @@ class ProjectTaskProgressController extends Controller
             'task_name' => $request->input('task_name'),
             'task_progress_percentage' => '0',
             'user_login_name' => $request->input('task_owner'),
-            'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,
+            'last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,
             // Add more fields as needed
         ]);
  
-        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress added successfully');
+        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress added successfully')->with('previousProject',$request->input('project_id'));
     }
 
     public function importfromexcel(Request $request)
@@ -198,12 +198,12 @@ class ProjectTaskProgressController extends Controller
                     'task_sequence_no_wbs' => $data['task_sequence_no_wbs'],
                     'task_name' => $data['task_name'],
                     'task_progress_percentage' => '0',
-                    'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,
+                    'last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,
                     // Add more fields as needed
                 ]);
             }
         } 
-        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress added successfully');
+        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress added successfully')->with('previousProject',$request->input('importfromexcelprojectid'));
     }
   
     public function assigntaskowner(Request $request)
@@ -215,19 +215,23 @@ class ProjectTaskProgressController extends Controller
                     $projecttaskprogress->delete();
                 }
                 if($request->input("update")!=null){
-                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => \Carbon\Carbon::now().' - '.auth()->user()->name,]);
+                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,]);
                 }
             }
         }
-        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress assigned successfully');
+        return redirect()->route('projecttaskprogress.createnewprojecttaskname')->with('success', 'project task progress assigned successfully')->with('previousProject',$request->input('assignproject'));
     }
 
     public function updateprojecttask(Request $request)
     {
         foreach($request->all()['update'] as $key => $value){
-            $start=substr($request->all()['start'][$key],6,4)."-".substr($request->all()['start'][$key],3,2)."-".substr($request->all()['start'][$key],0,2);
-            $end=substr($request->all()['end'][$key],6,4)."-".substr($request->all()['end'][$key],3,2)."-".substr($request->all()['end'][$key],0,2);
-            $projecttaskprogress = ProjectTaskProgress::findOrFail($value);
+            if(isset($request->all()['start'])){
+                $start=substr($request->all()['start'][$key],6,4)."-".substr($request->all()['start'][$key],3,2)."-".substr($request->all()['start'][$key],0,2);
+            }
+                if(isset($request->all()['end'])){
+                $end=substr($request->all()['end'][$key],6,4)."-".substr($request->all()['end'][$key],3,2)."-".substr($request->all()['end'][$key],0,2);
+            }
+                $projecttaskprogress = ProjectTaskProgress::findOrFail($value);
             if(isset($request->all()['start'][$key])){
                 $projecttaskprogress->update([
                     'task_actual_start_date'=>$start,
@@ -247,7 +251,7 @@ class ProjectTaskProgressController extends Controller
                 'last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,
             ]);
         }
-        return redirect()->route('projecttaskprogress.createupdateprojecttask')->with('success', 'project task progress updated successfully');
+        return redirect()->route('projecttaskprogress.createupdateprojecttask')->with('success', 'project task progress updated successfully')->with('previousProject', $request->all()['project_id']);
     }
   
     /**

@@ -31,8 +31,8 @@
           Show Password
       </div>
       <div class="form-group">
-          The password should at least be a mix of a lower case ( e.g. a, d), upper case 
-          character (e.g. B, F),  number (e.g. 2, 3) and symbol (e.g. &, @)
+      The new password should at least be a mix of a lower case character ( e.g. a, d), upper case character (e.g. B, F), number (e.g. 2, 3)
+        and symbol (e.g. &, @) -> for example, tpS@12345, 19&@#8ckLim, etc.
       </div>
       <div class="offset-sm-3 col-sm-6">
       <button type="submit" class="btn btn-primary btn-user btn-block">Change Password</button>

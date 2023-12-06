@@ -1,4 +1,5 @@
 @extends('layouts.app2')
+<script src="{{asset('admin_assets/js/createupdateprojecttask.js')}}"></script>
 @section('contents')
     <div class="d-flex align-items-center justify-content-between pb-5">
         <h3 class="mb-0"><b>Task Planning</b></h3>
@@ -11,7 +12,11 @@
         <select id="projectFilter" name="projectFilter" class="form-control" aria-label="Project Filter">
                     <option value="">Select Project</option>
             @foreach($project as $rs)
-                    <option value="{{ $rs->id }}">{{ $rs->project_name }}</option>
+                    <option value="{{ $rs->id }}"
+                    @if($rs->id==session('previousProject'))
+                        selected="selected"
+                    @endif
+                    >{{ $rs->project_name }}</option>
             @endforeach
         </select>
     </div>
@@ -22,6 +27,11 @@
         </div>
     @endif
     <form action="{{ route('projecttaskprogress.updateprojecttask') }}" method="POST" enctype="multipart/form-data">
+        <input hidden name="project_id" id="project_id"
+            @if(Session::has('previousProject'))
+                value="{{session('previousProject')}}"
+            @endif
+        >
         @csrf
         <table class="table table-hover" id="data-table">
             <thead class="table-primary">
@@ -46,13 +56,17 @@
                                 {{ $rs->task_name }}
                             </td>
                             <td class="align-middle">
+                                @if($rs->task_actual_start_date==NULL || $rs->task_progress_percentage==0)
                                 <input type="text" onkeydown="return false" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}"></input>
+                                @else
+                                {{date_format(date_create($rs->task_actual_start_date),"d-m-Y")}}
+                                @endif
                             </td>
                             <td class="align-middle">
-                                <input type="text" onkeydown="return false" class="datepicker" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}"></input>
+                                <input disabled type="text" onkeydown="return false" class="datepicker" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}"></input>
                             </td>
                             <td class="align-middle">
-                                <input type="number" min="{{$rs->task_progress_percentage}}" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}">
+                                <input type="number" min="{{$rs->task_progress_percentage}}" onchange="toggleEndDate()" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}">
                             </td>
                             <td class="align-middle">
                                 {{ $rs->last_update_bywhom }}
@@ -79,17 +93,18 @@
         var rows = table.getElementsByTagName('tr');
         // Loop through each <tr> element and log its content
         for (var i = 1; i < rows.length; i++) {
-            rows[i].style.display='none';
+            if(rows[i].getAttribute('data-project')!="{{session('previousProject')}}"){
+                rows[i].style.display='none';
+            }
         }
         $('#projectFilter').on('change', function() {
             var selectedProject = $(this).val();
-
+            document.getElementById("project_id").value=selectedProject;
             var table = document.getElementById('data-table');
             var rows = table.getElementsByTagName('tr');
-
             // Loop through each <tr> element and log its content
             for (var i = 1; i < rows.length; i++) {
-                if(rows[i].getAttribute('data-project')!=selectedProject&&selectedProject!=''   ){
+                if(rows[i].getAttribute('data-project')!=selectedProject&&selectedProject!=''){
                     rows[i].style.display='none';
                 }
                 else{
