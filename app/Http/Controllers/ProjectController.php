@@ -28,12 +28,12 @@ class ProjectController extends Controller
             // If the user is MSA, get all projects associated with the company
             if ($user->role_name == 'Master Super Admin - MSA') {
                 // $projects = $user->company->projects;
-                $projects = Project::all(); //showing all project
+                $projects = Project::orderBy('project_name','ASC')->get();
             } else {
                 // If the user is not MSA, get projects associated with the user's company_id
                 $companyProjects = Project::whereHas('companies', function ($query) use ($user) {
                     $query->where('companies.company_id', $user->company_id);
-                })->get();
+                })->orderBy('project_name','ASC')->get();
 
                 $projects = $companyProjects;
                 // dd($projects);

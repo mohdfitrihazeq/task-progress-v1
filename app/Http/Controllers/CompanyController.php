@@ -14,7 +14,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $company = Company::orderBy('created_at', 'DESC')->get();
+        $company = Company::orderBy('company_name', 'ASC')->get();
   
         return view('company.index', compact('company'));
     }

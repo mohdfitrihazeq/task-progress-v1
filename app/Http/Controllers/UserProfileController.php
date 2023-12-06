@@ -15,7 +15,7 @@ use Auth;
 
 class UserProfileController extends Controller
 {
-    public function index()
+        public function index()
     {
         $user = Auth::user();
         $profile = collect();
@@ -25,17 +25,27 @@ class UserProfileController extends Controller
         if ($user->company) {
             // If the user is MSA, get all profiles
             if ($user->role_name == 'Master Super Admin - MSA') {
-                $profile = User::with('company')->orderBy('created_at', 'DESC')->get();
+                $profile = User::join('companies', 'users.company_id', '=', 'companies.company_id')
+                    ->orderBy('companies.company_name', 'ASC')
+                    ->orderBy('users.user_name', 'ASC')
+                    ->orderBy('users.name', 'ASC')
+                    ->get(['users.*', 'companies.company_name']);
             } else {
                 // If the user is not MSA, get profiles associated with the user's company_id
-                $companyProfiles = User::where('company_id', $user->company_id)->with('company')->orderBy('created_at', 'DESC')->get();
+                $companyProfiles = User::where('company_id', $user->company_id)
+                    ->with('company')
+                    ->orderBy('user_name', 'ASC')
+                    ->orderBy('name', 'ASC')
+                    ->orderBy('email', 'ASC')
+                    ->orderBy('role_name', 'ASC')
+                    ->get();
                 $profile = $companyProfiles;
-                // dd($profiles);
             }
         }
-        // dd($profile);
+
         return view('profile.index', compact('profile', 'company'));
     }
+
 
 
     public function create()
