@@ -3,7 +3,9 @@
 @section('contents')
     <div class="d-flex align-items-center justify-content-between pb-5">
         <h3 class="mb-0"><b>Task Planning</b></h3>
-        <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
+        @if(in_array(auth()->user()->role_name,['Master Super Admin - MSA','SSA','PM','PD']))
+            <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
+        @endif
         <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-primary">Update Project Task</a>
         <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-primary">Completed Project Task</a>
     </div>

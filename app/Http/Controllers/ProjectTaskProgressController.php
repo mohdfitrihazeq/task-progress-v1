@@ -49,7 +49,7 @@ class ProjectTaskProgressController extends Controller
         ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
         $unassigned = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('user_login_name',null)->selectRaw('projects.id,projects.project_name,count(*) AS unassigned_count')->groupBy('projects.id','projects.project_name')->get();
-        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
+        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('project_name','ASC')->get();
         $user =  User::join('user_accessibles','users.user_name','=','user_accessibles.user_name')->whereIn('user_accessibles.project_id',UserAccessible::select('project_id')->where('user_name',auth()->user()->user_name)->get())->select('users.id','users.user_name','users.name','user_accessibles.project_id')->groupBy('users.id','users.name','users.user_name','user_accessibles.project_id')->orderBy('users.id','ASC')->get();
         return view('createnewprojecttaskname', compact('projecttaskprogress','project','user','unassigned'));
     }
@@ -93,7 +93,7 @@ class ProjectTaskProgressController extends Controller
         ->orderBy('project_task_progress.project_id','ASC')
         ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
-        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
+        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('project_name','ASC')->get();
         return view('createupdateprojecttask', compact('projecttaskprogress','project'));
     }
 
@@ -133,7 +133,7 @@ class ProjectTaskProgressController extends Controller
         ->orderBy('project_task_progress.project_id','ASC')
         ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
-        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('id','ASC')->get();
+        $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('project_name','ASC')->get();
         return view('completedprojecttask', compact('projecttaskprogress','project'));
     }
   
@@ -225,10 +225,10 @@ class ProjectTaskProgressController extends Controller
     public function updateprojecttask(Request $request)
     {
         foreach($request->all()['update'] as $key => $value){
-            if(isset($request->all()['start'])){
+            if(isset($request->all()['start'][$key])){
                 $start=substr($request->all()['start'][$key],6,4)."-".substr($request->all()['start'][$key],3,2)."-".substr($request->all()['start'][$key],0,2);
             }
-                if(isset($request->all()['end'])){
+                if(isset($request->all()['end'][$key])){
                 $end=substr($request->all()['end'][$key],6,4)."-".substr($request->all()['end'][$key],3,2)."-".substr($request->all()['end'][$key],0,2);
             }
                 $projecttaskprogress = ProjectTaskProgress::findOrFail($value);
