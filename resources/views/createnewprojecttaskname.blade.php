@@ -260,6 +260,7 @@
             document.getElementById("project_id").value=selectedProject;
             document.getElementById("importfromexcelprojectid").value=selectedProject;
             document.getElementById("importfromexcelprojectname").innerHTML=selectedValue;
+            document.getElementById("assignproject").value=selectedProject;
 
             var table = document.getElementById('data-table');
             var rows = table.getElementsByTagName('tr');
