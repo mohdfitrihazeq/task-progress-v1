@@ -209,7 +209,7 @@
         <div class="row">
             <div class="d-grid">
                 <button type="submit" name="update" value="update" class="btn btn-primary">Update Selected</button>
-                <button type="submit" name="delete" value="delete" class="btn btn-danger">Delete Selected</button>
+                <button type="submit" name="delete" onclick="return confirm('Are you sure to Delete the selected record(s) !')" value="delete" class="btn btn-danger">Delete Selected</button>
             </div>
         </div>
     </form>
@@ -246,7 +246,7 @@
         var options = select.getElementsByTagName('option');
         // Loop through each <tr> element and log its content
         for (var i = 1; i < options.length; i++) {
-            if(options[i].getAttribute('data-project')!=''){
+            if(("{{Session::has('previousProject')}}"==""&&options[i].getAttribute('data-project')!='')||("{{Session::has('previousProject')}}"=="1"&&options[i].getAttribute('data-project')!="{{session('previousProject')}}")){
                 options[i].style.display='none';
             }
         }

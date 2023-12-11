@@ -46,7 +46,7 @@ class ProjectTaskProgressController extends Controller
             'users.name'
         )
         ->orderBy('project_task_progress.project_id','ASC')
-        ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
+        ->orderBy('project_task_progress.id','ASC')
         ->get();
         $unassigned = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('user_login_name',null)->selectRaw('projects.id,projects.project_name,count(*) AS unassigned_count')->groupBy('projects.id','projects.project_name')->get();
         $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('project_name','ASC')->get();
