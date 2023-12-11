@@ -172,20 +172,28 @@
                                 </input>
                             </td>
                             <td class="align-middle">
-                                <Select name="assigntaskowner[{{ $loop->iteration-1 }}]" class="form-control">
-                                <option value="{{$rs->user_login_name}}">
-                                    {{$rs->user_name}} - {{$rs->name}}
-                                </option>
-                                @foreach($user as $rsuser)
-                                    @if($rsuser->project_id==$rs->project_id)
-                                        <option value="{{ $rsuser->id }}"
-                                            @if ($rsuser->id == $rs->user_login_name)
-                                                selected="selected"
-                                            @endif
-                                        >{{ $rsuser->user_name }} - {{ $rsuser->name }}</option>
+                                @if($rs->task_actual_start_date==null)
+                                    <Select name="assigntaskowner[{{ $loop->iteration-1 }}]" class="form-control">
+                                    @if($rs->user_login_name==null)
+                                        <option value="">
+                                            Select Task Owner
+                                        </option>
+                                    @else
+                                        <option value="{{$rs->user_login_name}}">
+                                            {{$rs->user_name}} - {{$rs->name}}
+                                        </option>
                                     @endif
-                                @endforeach
-                                </Select>
+                                    @foreach($user as $rsuser)
+                                        @if($rsuser->project_id==$rs->project_id)
+                                            <option value="{{ $rsuser->id }}"
+                                                @if ($rsuser->id == $rs->user_login_name)
+                                                    selected="selected"
+                                                @endif
+                                            >{{ $rsuser->user_name }} - {{ $rsuser->name }}</option>
+                                        @endif
+                                    @endforeach
+                                    </Select>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
