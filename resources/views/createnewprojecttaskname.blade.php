@@ -6,7 +6,7 @@
     <div class="modal" id="dataModal_{{$rs->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="exampleModalLabel">Alert Message</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -27,8 +27,8 @@
         @if(in_array(auth()->user()->role_name,['Master Super Admin - MSA','Super Super Admin - SSA','Project Manager - PM','Project Director - PD']))
             <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
         @endif
-        <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-primary">Update Project Task</a>
-        <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-primary">Completed Project Task</a>
+        <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-secondary">Update Project Task</a>
+        <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-secondary">Completed Project Task</a>
     </div>
     <div class="d-flex align-items-center justify-content-between">
         <h6 class="mb-0">Task planning for the project: </h1>
@@ -193,6 +193,12 @@
                                         @endif
                                     @endforeach
                                     </Select>
+                                @else
+                                    @foreach($user as $rsuser)
+                                        @if($rsuser->id==$rs->user_login_name&&$rsuser->project_id==$rs->project_id)
+                                            {{$rsuser->user_name}} - {{$rsuser->name}}
+                                        @endif
+                                    @endforeach
                                 @endif
                             </td>
                         </tr>

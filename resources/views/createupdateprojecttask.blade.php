@@ -4,10 +4,10 @@
     <div class="d-flex align-items-center justify-content-between pb-5">
         <h3 class="mb-0"><b>Task Planning</b></h3>
         @if(in_array(auth()->user()->role_name,['Master Super Admin - MSA','Super Super Admin - SSA','Project Manager - PM','Project Director - PD']))
-            <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-primary">Create New Project Task Name</a>
+            <a href="{{ route('projecttaskprogress.createnewprojecttaskname') }}" class="btn btn-secondary">Create New Project Task Name</a>
         @endif
         <a href="{{ route('projecttaskprogress.createupdateprojecttask') }}" class="btn btn-primary">Update Project Task</a>
-        <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-primary">Completed Project Task</a>
+        <a href="{{ route('projecttaskprogress.completedprojecttask') }}" class="btn btn-secondary">Completed Project Task</a>
     </div>
     <div class="d-flex align-items-center justify-content-between">
         <h6 class="mb-0">Task planning for the project: </h1>

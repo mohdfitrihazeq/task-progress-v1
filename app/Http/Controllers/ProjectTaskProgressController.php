@@ -23,6 +23,8 @@ class ProjectTaskProgressController extends Controller
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.task_actual_start_date',
+            'project_task_progress.task_actual_end_date',
             'project_task_progress.user_login_name',
             // Include other selected columns here
             'projects.project_name',
@@ -33,12 +35,13 @@ class ProjectTaskProgressController extends Controller
         ->leftJoin('users', 'project_task_progress.user_login_name', '=', 'users.id')
         ->join('user_accessibles', 'user_accessibles.project_id', '=', 'project_task_progress.project_id')
         ->where('user_accessibles.user_name', '=', auth()->user()->user_name)
-        ->where('task_progress_percentage', '=', 0)
         ->groupBy(
             'project_task_progress.id',
             'project_task_progress.project_id',
             'project_task_progress.task_sequence_no_wbs',
             'project_task_progress.task_name',
+            'project_task_progress.task_actual_start_date',
+            'project_task_progress.task_actual_end_date',
             'project_task_progress.user_login_name',
             // Include other selected columns here
             'projects.project_name',
@@ -215,7 +218,13 @@ class ProjectTaskProgressController extends Controller
                     $projecttaskprogress->delete();
                 }
                 if($request->input("update")!=null){
-                    $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],'user_login_name'=>$request->all()['assigntaskowner'][$key],'last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,]);
+                    if(isset($request->all()['assigntaskname'][$key])){
+                        $projecttaskprogress->update(['task_name'=>$request->all()['assigntaskname'][$key],]);
+                    }
+                    if(isset($request->all()['assigntaskowner'][$key])){
+                    $projecttaskprogress->update(['user_login_name'=>$request->all()['assigntaskowner'][$key],]);
+                    }
+                    $projecttaskprogress->update(['last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,]);
                 }
             }
         }
