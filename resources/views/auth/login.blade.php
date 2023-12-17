@@ -45,7 +45,14 @@
                     </div>
                     <div class="form-group">
                       <input name="password" type="password" id="passwordInput" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
-                      <input type="checkbox" onclick="togglePassword()"> Show Password
+                    </div>
+                      <div class="form-group row">
+                      <div class="col d-flex align-items-center justify-content-center">
+                        <input type="checkbox" onclick="togglePassword()"> Show Password
+                      </div>
+                      <div class="col text-right">
+                        <button type="submit" class="btn btn-primary btn-block btn-user" name="forgotPassword" value="forgotPassword">Forgot Password?</button>
+                      </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
                   </form>

@@ -17,6 +17,7 @@ Route::controller(AuthController::class)->group(function () {
 
     Route::get('firstlogin', 'showLoginForm');
     Route::get('firstlogin/{user}', 'showFirstLoginForm')->name('firstlogin');
+    Route::get('resetpassword/{user}', 'showResetPasswordForm')->name('resetpassword');
     Route::post('firstlogin/changepassword', 'changePassword')->name('changepassword');
     
     Route::get('register', 'register')->name('register');

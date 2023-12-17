@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Company;
+use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -29,6 +31,17 @@ class AuthController extends Controller
 				// Record does not exist
 				return redirect()->route('login');
 			}
+		}
+	}
+
+    public function showResetPasswordForm(Request $request){
+		if (!$request->route('user')) {
+            // ID parameter is missing; redirect to another URL
+            return redirect('login');
+        }
+		else{
+			$user = $request->route('user'); // Retrieve the 'user' parameter from the route
+            return view('auth.firstlogin', ['user' => $user]);
 		}
 	}
 	
@@ -123,6 +136,21 @@ class AuthController extends Controller
   
     public function loginAction(Request $request)
     {
+        if($request->input('forgotPassword')!=null && $request->input('forgotPassword')=="forgotPassword"){
+            if(User::where('user_name', '=', $request->input('user_name'))
+            ->whereNotNull('password_changed_at')
+            ->whereNotNull('email')
+            ->exists()){
+                $user = User::where('user_name', '=', $request->input('user_name'))->first();
+                $userEmail = $user->email;
+                $emailData = [
+                    'user_name' => $user->user_name,
+                    'name' => $user->name,
+                ];
+                Mail::to($userEmail, $user->name)->send(new ResetPasswordMail($emailData));
+                return redirect()->back()->withErrors("Your password reset link has been sent to your registered email account -> ".substr($userEmail,0,4)."********".substr($userEmail,-3)." !");
+            }
+        }
         Validator::make($request->all(), [
             'user_name' => 'required',
         ])->validate();
