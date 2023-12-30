@@ -54,7 +54,7 @@
                         <button type="submit" class="btn btn-primary btn-block btn-user" name="forgotPassword" value="forgotPassword">Forgot Password?</button>
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-user" name="login" id="login" value="login">Login</button>
                   </form>
                   <hr>
                 </div>
@@ -81,6 +81,12 @@
             passwordInput.type = 'password';
         }
     }
+    $(document).on('keypress',function(e) {
+      if(e.which == 13) {
+        e.preventDefault();
+        document.getElementById('login').click();
+      }
+    });
   </script>
 </body>
 </html>

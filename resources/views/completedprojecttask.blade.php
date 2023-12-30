@@ -37,7 +37,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if($projecttaskprogress->count() > 0)
+                @if(sizeof($projecttaskprogress) > 0)
                     @foreach($projecttaskprogress as $rs)
                         <tr data-project="{{ $rs->project_id }}">
                             <td class="align-middle">{{ $rs->task_sequence_no_wbs }}</td>

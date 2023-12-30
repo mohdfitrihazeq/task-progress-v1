@@ -51,6 +51,39 @@ class ProjectTaskProgressController extends Controller
         ->orderBy('project_task_progress.project_id','ASC')
         ->orderBy('project_task_progress.id','ASC')
         ->get();
+        $projectarr=[];
+        foreach($projecttaskprogress as $progress){
+            array_push($projectarr,$progress);
+            $progress['wbsarr']=explode('.',$progress['task_sequence_no_wbs']);
+        }
+        usort($projectarr, function ($a, $b) {
+            if($a['project_id']!=$b['project_id']){
+                return $a['project_id'] - $b['project_id'];
+            }
+            else{
+                if(sizeof($a['wbsarr'])==sizeof($b['wbsarr'])){
+                    for($i=0;$i<sizeof($a['wbsarr']);$i++){
+                        if($a['wbsarr'][$i]!=$b['wbsarr'][$i]){
+                            return $a['wbsarr'][$i] - $b['wbsarr'][$i];
+                        }
+                    }
+                }
+                else{
+                    for($i=0;$i<min(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i++){
+                        if($a['wbsarr'][$i]!=$b['wbsarr'][$i]){
+                            return $a['wbsarr'][$i] - $b['wbsarr'][$i];
+                        }
+                    }
+                    for($i=min(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i<max(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i++){
+                        return sizeof($a['wbsarr']) - sizeof($b['wbsarr']);
+                    }
+                }
+            }
+        });
+        foreach($projectarr as $progress){
+            unset($progress['wbsarr']);
+        }
+        $projecttaskprogress=$projectarr;
         $unassigned = ProjectTaskProgress::join('projects','project_task_progress.project_id','=','projects.id')->where('user_login_name',null)->selectRaw('projects.id,projects.project_name,count(*) AS unassigned_count')->groupBy('projects.id','projects.project_name')->get();
         $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('project_name','ASC')->get();
         $user =  User::join('user_accessibles','users.user_name','=','user_accessibles.user_name')->whereIn('user_accessibles.project_id',UserAccessible::select('project_id')->where('user_name',auth()->user()->user_name)->get())->select('users.id','users.user_name','users.name','user_accessibles.project_id')->groupBy('users.id','users.name','users.user_name','user_accessibles.project_id')->orderBy('users.id','ASC')->get();
@@ -96,6 +129,39 @@ class ProjectTaskProgressController extends Controller
         ->orderBy('project_task_progress.project_id','ASC')
         ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
+        $projectarr=[];
+        foreach($projecttaskprogress as $progress){
+            array_push($projectarr,$progress);
+            $progress['wbsarr']=explode('.',$progress['task_sequence_no_wbs']);
+        }
+        usort($projectarr, function ($a, $b) {
+            if($a['project_id']!=$b['project_id']){
+                return $a['project_id'] - $b['project_id'];
+            }
+            else{
+                if(sizeof($a['wbsarr'])==sizeof($b['wbsarr'])){
+                    for($i=0;$i<sizeof($a['wbsarr']);$i++){
+                        if($a['wbsarr'][$i]!=$b['wbsarr'][$i]){
+                            return $a['wbsarr'][$i] - $b['wbsarr'][$i];
+                        }
+                    }
+                }
+                else{
+                    for($i=0;$i<min(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i++){
+                        if($a['wbsarr'][$i]!=$b['wbsarr'][$i]){
+                            return $a['wbsarr'][$i] - $b['wbsarr'][$i];
+                        }
+                    }
+                    for($i=min(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i<max(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i++){
+                        return sizeof($a['wbsarr']) - sizeof($b['wbsarr']);
+                    }
+                }
+            }
+        });
+        foreach($projectarr as $progress){
+            unset($progress['wbsarr']);
+        }
+        $projecttaskprogress=$projectarr;
         $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('project_name','ASC')->get();
         return view('createupdateprojecttask', compact('projecttaskprogress','project'));
     }
@@ -136,6 +202,39 @@ class ProjectTaskProgressController extends Controller
         ->orderBy('project_task_progress.project_id','ASC')
         ->orderBy('project_task_progress.task_sequence_no_wbs','ASC')
         ->get();
+        $projectarr=[];
+        foreach($projecttaskprogress as $progress){
+            array_push($projectarr,$progress);
+            $progress['wbsarr']=explode('.',$progress['task_sequence_no_wbs']);
+        }
+        usort($projectarr, function ($a, $b) {
+            if($a['project_id']!=$b['project_id']){
+                return $a['project_id'] - $b['project_id'];
+            }
+            else{
+                if(sizeof($a['wbsarr'])==sizeof($b['wbsarr'])){
+                    for($i=0;$i<sizeof($a['wbsarr']);$i++){
+                        if($a['wbsarr'][$i]!=$b['wbsarr'][$i]){
+                            return $a['wbsarr'][$i] - $b['wbsarr'][$i];
+                        }
+                    }
+                }
+                else{
+                    for($i=0;$i<min(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i++){
+                        if($a['wbsarr'][$i]!=$b['wbsarr'][$i]){
+                            return $a['wbsarr'][$i] - $b['wbsarr'][$i];
+                        }
+                    }
+                    for($i=min(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i<max(sizeof($a['wbsarr']),sizeof($b['wbsarr']));$i++){
+                        return sizeof($a['wbsarr']) - sizeof($b['wbsarr']);
+                    }
+                }
+            }
+        });
+        foreach($projectarr as $progress){
+            unset($progress['wbsarr']);
+        }
+        $projecttaskprogress=$projectarr;
         $project =  Project::join('user_accessibles','user_accessibles.project_id','=','projects.id')->where('user_accessibles.user_name',auth()->user()->user_name)->select('projects.*')->orderBy('project_name','ASC')->get();
         return view('completedprojecttask', compact('projecttaskprogress','project'));
     }
