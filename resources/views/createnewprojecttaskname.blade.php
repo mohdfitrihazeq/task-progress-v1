@@ -72,7 +72,7 @@
         hidden>
         <div class="row mb-3">
             <div class="col">
-                <label class="form-label">Project Sequence No. <b>(WBS)</b>: </label>
+                <label class="form-label">Task Sequence No. <b>(WBS)</b>: </label>
                 <input type="text" id="task_sequence_no_wbs" name="task_sequence_no_wbs" class="form-control" placeholder="Task Sequence No." required>
             </div>
         </div>
