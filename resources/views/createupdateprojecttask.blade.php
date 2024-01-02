@@ -127,11 +127,11 @@
         for ( i = 0 ; i < picker.length ; i++ ){
             if(picker[i].getAttribute("data-date")!=""){
                 var date = new Date(picker[i].getAttribute("data-date"));
-                picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+                picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1).toString().padStart(2,"0")+"-"+date.getFullYear();
             }
             else{
                 var date = new Date();
-                picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+                picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1).toString().padStart(2,"0")+"-"+date.getFullYear();
             }
         }
     });

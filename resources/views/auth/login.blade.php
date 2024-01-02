@@ -51,7 +51,8 @@
                         <input type="checkbox" onclick="togglePassword()"> Show Password
                       </div>
                       <div class="col text-right">
-                        <button type="submit" class="btn btn-primary btn-block btn-user" name="forgotPassword" value="forgotPassword">Forgot Password?</button>
+                        <p class="mb-0" onclick="forgotPassword()" style="cursor:pointer;text-decoration: underline;">Forgot Password?</p>
+                        <button hidden type="submit" class="btn btn-primary btn-block btn-user" name="forgotPassword" id="forgotPassword" value="forgotPassword"></button>
                       </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-user" name="login" id="login" value="login">Login</button>
@@ -80,6 +81,9 @@
         } else {
             passwordInput.type = 'password';
         }
+    }
+    function forgotPassword(){
+        document.getElementById('forgotPassword').click();
     }
     $(document).on('keypress',function(e) {
       if(e.which == 13) {
