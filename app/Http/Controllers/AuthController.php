@@ -59,7 +59,7 @@ class AuthController extends Controller
             ],
         ]);
         if ($validator->fails()) {
-            return redirect('resetpassword/'.$request->input('user_name'))
+            return redirect($request->input('context').'/'.$request->input('user_name'))
                         ->withErrors($validator)
                         ->withInput();
         }

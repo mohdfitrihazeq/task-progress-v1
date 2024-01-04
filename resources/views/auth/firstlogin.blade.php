@@ -29,6 +29,7 @@
               </div>
               <form action="{{ route('changepassword') }}" method="POST" class="user">
                 @csrf
+                <input name="context" id="context" value="{{\Request::route()->getName()}}" hidden></input>
                 <div class="form-group">
                     <input name="user_name" hidden value="{{$user}}" id="exampleInputUsername">{{$user}}
                   @error('user_name')
