@@ -9,12 +9,12 @@ function toggleEndDate() {
         }
     }
 }
-function validateEndDate(str1,str2) {
-    if(str1<document.getElementsByName("start["+str2+"]")[0].value){
+function validateEndDate(str) {
+    if(document.getElementsByName("end["+str+"]")[0].value<document.getElementsByName("start["+str+"]")[0].value){
         alert("The Actual End Date has to be greater than or equal to the Actual Start Date !");
-        document.getElementsByName("update["+str2+"]")[0].disabled=true;
+        document.getElementsByName("update["+str+"]")[0].disabled=true;
     }
     else{
-        document.getElementsByName("update["+str2+"]")[0].disabled=false;
+        document.getElementsByName("update["+str+"]")[0].disabled=false;
     }
 }

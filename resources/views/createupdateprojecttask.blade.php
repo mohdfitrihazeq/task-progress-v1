@@ -59,14 +59,14 @@
                             </td>
                             <td class="align-middle">
                                 @if($rs->task_actual_start_date==NULL)
-                                <input type="text" onkeydown="return false" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}"></input>
+                                <input type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}"></input>
                                 @else
                                 <input type="text" onkeydown="return false" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}" hidden></input>
                                 {{date_format(date_create($rs->task_actual_start_date),"d-m-Y")}}
                                 @endif
                             </td>
                             <td class="align-middle">
-                                <input disabled type="text" onkeydown="return false" onchange="validateEndDate(this.value,'{{$loop->iteration-1}}')" class="datepicker" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}"></input>
+                                <input disabled type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" class="datepicker" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}"></input>
                             </td>
                             <td class="align-middle">
                                 <input type="number" min="{{$rs->task_progress_percentage}}" onchange="toggleEndDate()" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}">
