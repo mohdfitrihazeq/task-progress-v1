@@ -59,7 +59,7 @@ class AuthController extends Controller
             ],
         ]);
         if ($validator->fails()) {
-            return redirect('firstlogin/'.$request->input('user_name'))
+            return redirect('resetpassword/'.$request->input('user_name'))
                         ->withErrors($validator)
                         ->withInput();
         }
@@ -77,7 +77,6 @@ class AuthController extends Controller
         }
   
         $request->session()->regenerate();
-  
         return redirect()->route('dashboard');
 	}
     
