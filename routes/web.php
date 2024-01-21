@@ -47,18 +47,11 @@ Route::middleware('auth')->group(function () {
     });
  
     Route::controller(ProjectTaskProgressController::class)->prefix('projecttaskprogress')->group(function () {
-        Route::get('createnewprojecttaskname','createnewprojecttaskname')->name('projecttaskprogress.createnewprojecttaskname');
-        Route::get('','createupdateprojecttask')->name('projecttaskprogress.createupdateprojecttask');
-        Route::get('completedprojecttask','completedprojecttask')->name('projecttaskprogress.completedprojecttask');
-        Route::get('create','create')->name('projecttaskprogress.create');
-        Route::post('store','store')->name('projecttaskprogress.store');
-        Route::post('importfromexcel', 'importfromexcel')->name('projecttaskprogress.importfromexcel');
-        Route::post('assigntaskowner', 'assigntaskowner')->name('projecttaskprogress.assigntaskowner');
-        Route::post('updateprojecttask', 'updateprojecttask')->name('projecttaskprogress.updateprojecttask');
-        Route::get('show/{id}','show')->name('projecttaskprogress.show');
-        Route::get('edit/{id}','edit')->name('projecttaskprogress.edit');
-        Route::put('edit/{id}','update')->name('projecttaskprogress.update');
-        Route::delete('destroy/{id}','destroy')->name('projecttaskprogress.destroy');
+        Route::get('/{id}', 'index')->name('projecttaskprogress.index');
+        Route::get('/{id}/{id2}/{id3}', 'index')->name('projecttaskprogress');
+        Route::post('store', 'store')->name('projecttaskprogress.store');
+        Route::put('edit', 'update')->name('projecttaskprogress.update');
+        Route::delete('destroy', 'destroy')->name('projecttaskprogress.destroy');
     });
 
     Route::controller(ProjectController::class)->prefix('project')->group(function () {

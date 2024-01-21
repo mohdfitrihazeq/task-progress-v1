@@ -20,9 +20,9 @@
   
   <li class="nav-item">
   @if(in_array(auth()->user()->role_name,['Master Super Admin - MSA','Super Super Admin - SSA','Project Manager - PM','Project Director - PD']))
-    <a class="nav-link" href="{{ route('projecttaskprogress.createnewprojecttaskname') }}">
+    <a class="nav-link" href="{{ route('projecttaskprogress.index',['id' => 'create']) }}">
   @else
-    <a class="nav-link" href="{{ route('projecttaskprogress.createupdateprojecttask') }}">
+    <a class="nav-link" href="{{ route('projecttaskprogress.index',['id' => 'update']) }}">
   @endif
     <i class="fas fa-fw fa-wrench"></i>
       <span>Task Planning</span>
