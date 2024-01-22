@@ -6,7 +6,8 @@
         <div class="col-md-3 text-left">
             <h3><b>Task Planning</b></h3>
         </div>
-        <div class="col-md-3 text-left">
+        @if(in_array(auth()->user()->role_name,['Master Super Admin - MSA','Super Super Admin - SSA','Project Manager - PM','Project Director - PD']))
+        <div class="col text-left">
             @if($currentProjectId!=null)
             <a href="{{route('projecttaskprogress',['id'=>'create','id2'=>$currentProjectId,'id3'=>($currentModule=='create')*($currentPage)+($currentModule!='create')])}}">
             @else
@@ -16,7 +17,8 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3 text-center">
+        @endif
+        <div class="col text-center">
             @if($currentProjectId!=null)
             <a href="{{route('projecttaskprogress',['id'=>'update','id2'=>$currentProjectId,'id3'=>($currentModule=='update')*($currentPage)+($currentModule!='update')])}}">
             @else
@@ -26,7 +28,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3 text-right">
+        <div class="col text-right">
             @if($currentProjectId!=null)
             <a href="{{route('projecttaskprogress',['id'=>'completed','id2'=>$currentProjectId,'id3'=>($currentModule=='completed')*($currentPage)+($currentModule!='completed')])}}">
             @else
@@ -150,7 +152,6 @@
             <hr class="border-primary border-5"></hr>
                 <div class="row bg-primary text-white align-items-center">
                     <div class="col-md-1">
-                        <input type="checkbox" class="form-control"></input>
                     </div>
                     <div class="col-md-2">
                         <b>Task Sequence No. (WBS)</b>
@@ -173,7 +174,7 @@
                     @if($i%2==1)
                         bg-primary text-white
                     @else
-                        bg-info text-white
+                       bg-grey-50
                     @endif">
                         <div class="col-md-1">
                             <input name="updatetask[{{$i}}]" type="checkbox" class="form-control" value="{{$projecttaskprogress[$i]['id']}}"></input>
@@ -187,9 +188,9 @@
                         </div>
                         <div class="col-md-5" class="form-control
                         @if($i%2==1)
-                            bg-primary
+                            bg-primary text-white
                         @else
-                            bg-info
+                           bg-grey-50
                         @endif">
                             <Select name="task_owner[{{$i}}]" class="form-control">
                                 <option value="">Select Task Owner</option>
@@ -204,8 +205,11 @@
                         </div>
                     </div>
                 @endfor
-                <div class="row bg-white text-white align-items-center py-2">
-                    <div class="col-md-12">
+                <div class="row bg-grey-50 py-2">
+                    <div class="col-md-1">
+                    <input type="checkbox" name="select_all" class="form-control" onclick="selectAll(this.checked)"></input>
+                    </div>
+                    <div class="col-md-11">
                         <input type="submit" name="update" class="form-control col-md-2 btn btn-primary" value="Update Selected"></input>
                         <input type="submit" name="destroy" class="form-control col-md-2 btn btn-danger" value="Delete Selected"></input>
                     </div>
@@ -219,7 +223,7 @@
         <input name="current_module" value="{{$currentModule}}" hidden></input>
         <input name="project_id" value="{{$currentProjectId}}" hidden></input>
         <input name="current_page" value="{{$currentPage}}" hidden></input>
-            <div class="row bg-primary text-white">
+            <div class="row bg-primary text-white align-items-center">
                 <div class="col-md-1">
                     <b>Task Sequence No. (WBS)</b>
                 </div>
@@ -243,11 +247,11 @@
                 </div>
             </div>
             @foreach($projecttaskprogress as $rs)
-                <div class="row text-white
+                <div class="row align-items-center 
                 @if($loop->iteration%2==1)
-                    bg-info"
+                   bg-grey-50"
                 @else
-                    bg-primary"
+                    bg-primary text-white"
                 @endif
                 >
                     <div class="col-md-1">
@@ -258,7 +262,7 @@
                     </div>
                     <div class="col-md-2">
                         @if($rs->task_actual_start_date==NULL)
-                            <input class="form-control datepicker" type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" name="start[{{$loop->iteration-1}}]" data-date="{{$rs->task_actual_start_date}}"></input>
+                            <input class="form-control datepicker" type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" name="start[{{$loop->iteration-1}}]" data-date="{{$rs->task_actual_start_date}}" data-backdate="-{{$rs->backdated_date_days}}d"></input>
                         @else
                             <input class="form-control" type="text" onkeydown="return false" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}" hidden></input>
                             {{date_format(date_create($rs->task_actual_start_date),"d-m-Y")}}
@@ -286,15 +290,18 @@
                     maxDate: "+0d",
                 });
                 $(document).ready(function() {
+                    $(".datepicker").each(function(){$(this).datepicker( "option", "minDate", $(this).attr("data-backdate"));});
                     var picker = document.getElementsByClassName("datepicker");
                     for ( i = 0 ; i < picker.length ; i++ ){
                         if(picker[i].getAttribute("data-date")!=""){
                             var date = new Date(picker[i].getAttribute("data-date"));
                             picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1).toString().padStart(2,"0")+"-"+date.getFullYear();
+                            
                         }
                         else{
                             var date = new Date();
                             picker[i].value = date.getDate().toString().padStart(2,"0")+"-"+(date.getMonth()+1).toString().padStart(2,"0")+"-"+date.getFullYear();
+                            
                         }
                     }
                 });
@@ -320,11 +327,11 @@
                     </div>
                 </div>
                 @foreach($projecttaskprogress as $rs)
-                    <div name="data" class="row text-white
+                    <div name="data" class="row
                     @if($loop->iteration%2==1)
-                        bg-info"
+                       bg-grey-50"
                     @else
-                        bg-primary"
+                        bg-primary text-white"
                     @endif
                     >
                         <div class="col-md-3">

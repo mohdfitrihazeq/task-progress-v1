@@ -24,6 +24,15 @@
                     <input type="text" name="project_name" class="form-control" placeholder="project" value="{{ old('project_name') }}"required>
                 </div>
             </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label">Number of Backdated Date Days</label>
+                </div>
+                <div class="col">
+                    <input min="2" max="550" type="number" name="backdated_date_days" class="form-control" placeholder="2" value="{{ old('backdated_date_days') }}"required>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
         @else
         <div class="row mb-3">
             <div class="col">

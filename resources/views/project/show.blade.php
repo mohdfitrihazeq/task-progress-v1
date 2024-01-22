@@ -26,6 +26,15 @@
             </div>
         </div>
     @endif
+    <div class="row">
+        <div class="col">
+            <label class="form-label">Number of Backdated Date Days</label>
+        </div>
+        <div class="col">
+            <input min="2" max="550" type="number" name="backdated_date_days" class="form-control" placeholder="2" value="{{ $project->backdated_date_days }}"required>
+        </div>
+            <div class="col-md-6"></div>
+    </div>
     <div class="form-group">
         <div class="col-md-6 col-md-offset-4">
             <a href="{{ route('project') }}" class="btn btn-secondary">Back</a>

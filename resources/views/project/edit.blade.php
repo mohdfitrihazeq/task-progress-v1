@@ -32,6 +32,15 @@
             </div>
         </div>
         @endif
+        <div class="row">
+            <div class="col">
+                <label class="form-label">Number of Backdated Date Days</label>
+            </div>
+            <div class="col">
+                <input min="2" max="550" type="number" name="backdated_date_days" class="form-control" placeholder="2" value="{{ $project->backdated_date_days }}"required>
+            </div>
+            <div class="col-md-6"></div>
+        </div>
         @if($errors->any())
             <div class="alert alert-danger">
                 <ul>

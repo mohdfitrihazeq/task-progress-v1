@@ -38,7 +38,7 @@ class ProjectTaskProgressController extends Controller
         else{
             $currentProject = "Select Project";
         }
-        $projects = $projects->get();
+        $projects = $projects->orderBy('project_name','desc')->get();
         $users = collect();
         $users =  User::join('user_accessibles','users.user_name','=','user_accessibles.user_name')
         ->whereIn('user_accessibles.project_id',UserAccessible::select('project_id')
@@ -60,6 +60,7 @@ class ProjectTaskProgressController extends Controller
         ,'project_task_progress.project_id'
         ,'project_task_progress.user_login_name'
         ,'projects.project_name'
+        ,'projects.backdated_date_days'
         ,'users.user_name')
         ->join('user_accessibles','project_task_progress.project_id','=','user_accessibles.project_id')
         ->join('projects','project_task_progress.project_id','=','projects.id')
@@ -69,10 +70,11 @@ class ProjectTaskProgressController extends Controller
 
         switch($request->route('id')){
             case 'create': 
-                $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_start_date');
+                $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_end_date');
                 break;
             case 'update':
-                $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_end_date');
+                $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_end_date')
+                ->where('user_login_name','=',$user->id);
                 break;
             case 'completed':
                 $projecttaskprogress = $projecttaskprogress->whereNotNull('task_actual_end_date');
@@ -177,37 +179,39 @@ class ProjectTaskProgressController extends Controller
     }
 
     public function update(Request $request)
-    {
-        foreach($request->all()['updatetask'] as $key => $value){
-            $projecttaskprogress = ProjectTaskProgress::findOrFail($request->all()['updatetask'][$key]);
-            if($request->input("destroy")!=null){
-                $projecttaskprogress->delete();
-            }
-            if($request->input("update")!=null){
-                if($request->all()['task_name'][$key]!=null){
-                    $projecttaskprogress->update(['task_name'=>$request->all()['task_name'][$key],]);
+    {   
+        if(isset($request->all()['updatetask'])){
+            foreach($request->all()['updatetask'] as $key => $value){
+                $projecttaskprogress = ProjectTaskProgress::findOrFail($request->all()['updatetask'][$key]);
+                if($request->input("destroy")!=null){
+                    $projecttaskprogress->delete();
                 }
-                if($request->all()['task_owner'][$key]!=null){
-                    $projecttaskprogress->update(['user_login_name'=>$request->all()['task_owner'][$key],]);
+                if($request->input("update")!=null){
+                    if($request->all()['task_name'][$key]!=null){
+                        $projecttaskprogress->update(['task_name'=>$request->all()['task_name'][$key],]);
+                    }
+                    if($request->all()['task_owner'][$key]!=null){
+                        $projecttaskprogress->update(['user_login_name'=>$request->all()['task_owner'][$key],]);
+                    }
+                    $projecttaskprogress->update(['last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,]);
                 }
-                $projecttaskprogress->update(['last_update_bywhom' => \Carbon\Carbon::now()->format('d-m-Y H:i:s').' - '.auth()->user()->name,]);
-            }
-            if($request->all()['start'][$key]!=null){
-                $start=substr($request->all()['start'][$key],6,4)."-".substr($request->all()['start'][$key],3,2)."-".substr($request->all()['start'][$key],0,2);
-                $projecttaskprogress->update([
-                    'task_actual_start_date'=>$start,
-                ]);
-            }
-            if(isset($request->all()['end'][$key])){
-                $end=substr($request->all()['end'][$key],6,4)."-".substr($request->all()['end'][$key],3,2)."-".substr($request->all()['end'][$key],0,2);
-                $projecttaskprogress->update([
-                    'task_actual_end_date'=>$end,
-                ]);
-            }
-            if($request->all()['progress'][$key]!=null){
-                $projecttaskprogress->update([
-                    'task_progress_percentage'=>$request->all()['progress'][$key],
-                ]);
+                if(isset($request->all()['start'][$key])){
+                    $start=substr($request->all()['start'][$key],6,4)."-".substr($request->all()['start'][$key],3,2)."-".substr($request->all()['start'][$key],0,2);
+                    $projecttaskprogress->update([
+                        'task_actual_start_date'=>$start,
+                    ]);
+                }
+                if(isset($request->all()['end'][$key])){
+                    $end=substr($request->all()['end'][$key],6,4)."-".substr($request->all()['end'][$key],3,2)."-".substr($request->all()['end'][$key],0,2);
+                    $projecttaskprogress->update([
+                        'task_actual_end_date'=>$end,
+                    ]);
+                }
+                if(isset($request->all()['progress'][$key])){
+                    $projecttaskprogress->update([
+                        'task_progress_percentage'=>$request->all()['progress'][$key],
+                    ]);
+                }
             }
         }
         return redirect()->route('projecttaskprogress',['id'=>$request->input('current_module'),'id2'=>$request->input('project_id'),'id3'=>$request->input('current_page')])->with('success', 'project task progress updated successfully')->with('previousProject',$request->input('assignproject'));

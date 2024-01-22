@@ -9,7 +9,8 @@ class Project extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'project_name'
+        'project_name',
+        'backdated_date_days'
     ];
 
     public function companies()

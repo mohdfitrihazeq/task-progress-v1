@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('project_name');
+            $table->smallInteger('backdated_date_days')->default(2);
             $table->timestamps();
         });
     }

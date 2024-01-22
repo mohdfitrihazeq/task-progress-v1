@@ -76,6 +76,7 @@ class ProjectController extends Controller
         // Create the project
         $project = Project::create([
             'project_name' => $request->input('project_name'),
+            'backdated_date_days' => $request->input('backdated_date_days'),
         ]);
 
         // Check if the user is Master Super Admin - MSA
@@ -159,6 +160,7 @@ class ProjectController extends Controller
         // Update the project's general information
         $project->update([
             'project_name' => $request->input('project_name'),
+            'backdated_date_days' => $request->input('backdated_date_days'),
         ]);
 
         // Check if the user is Master Super Admin - MSA

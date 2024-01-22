@@ -151,3 +151,16 @@ function fnExcelReport() {
 
     return sa;
 }
+
+function selectAll(str){
+    if(str==true){
+        document.querySelectorAll('input[type="checkbox"]').forEach(function(e){
+            e.checked=true;
+        });
+    }
+    else{
+        document.querySelectorAll('input[type="checkbox"]').forEach(function(e){
+            e.checked=false;
+        });
+    }
+}
