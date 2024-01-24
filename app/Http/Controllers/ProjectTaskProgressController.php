@@ -84,8 +84,10 @@ class ProjectTaskProgressController extends Controller
         }
         $projecttaskprogress = $projecttaskprogress->get();
         $total = ceil($projecttaskprogress->count()/100)+1;
-        $projecttaskprogress = $projecttaskprogress->skip((($request->route('id3')-1)*100))
-        ->take(100);
+        if(in_array($request->route('id'),['create','update'])){
+            $projecttaskprogress = $projecttaskprogress->skip((($request->route('id3')-1)*100))
+            ->take(100);
+        }
         $currentModule = $request->route('id');
         $currentPage = $request->route('id3');
         $projectarr=[];

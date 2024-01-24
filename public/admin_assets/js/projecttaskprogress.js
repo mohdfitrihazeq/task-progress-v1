@@ -8,7 +8,9 @@ function toggleEndDate(str) {
 }
 
 function validateEndDate(str) {
-    if(document.getElementsByName("end["+str+"]")[0].value<document.getElementsByName("start["+str+"]")[0].value){
+    var enddate = document.getElementsByName("end["+str+"]")[0].value.substring(6,10) + "-" + document.getElementsByName("end["+str+"]")[0].value.substring(3,5) + "-" + document.getElementsByName("end["+str+"]")[0].value.substring(0,2);
+    var startdate = document.getElementsByName("start["+str+"]")[0].value.substring(6,10) + "-" + document.getElementsByName("start["+str+"]")[0].value.substring(3,5) + "-" + document.getElementsByName("start["+str+"]")[0].value.substring(0,2);
+    if(enddate<startdate){
         alert("The Actual End Date has to be greater than or equal to the Actual Start Date !");
         document.getElementsByName("updatetask["+str+"]")[0].disabled=true;
     }

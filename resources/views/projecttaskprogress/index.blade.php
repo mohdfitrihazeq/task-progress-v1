@@ -156,11 +156,14 @@
                     <div class="col-md-2">
                         <b>Task Sequence No. (WBS)</b>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <b>Project Task Name</b>
                     </div>
-                    <div class="col-md-5 text-center">
+                    <div class="col-md-4 text-center">
                         <b>Task Owner</b>
+                    </div>
+                    <div class="col-md-2">
+                        <b>Actual Start Date</b>
                     </div>
                 </div>
             <form action="{{ route('projecttaskprogress.update') }}" method="POST" enctype="multipart/form-data">
@@ -170,28 +173,18 @@
                 <input name="project_id" value="{{$currentProjectId}}" hidden></input>
                 <input name="current_page" value="{{$currentPage}}" hidden></input>
                 @for($i=0;$i<sizeof($projecttaskprogress);$i++)
-                    <div class="row py-2 align-items-center
-                    @if($i%2==1)
-                        bg-primary text-white
-                    @else
-                       bg-grey-50
-                    @endif">
+                    <div class="row py-2 align-items-center">
                         <div class="col-md-1">
                             <input name="updatetask[{{$i}}]" type="checkbox" class="form-control" value="{{$projecttaskprogress[$i]['id']}}"></input>
                         </div>
-                        <div class="col-md-1" class="form-control">
+                        <div class="col-md-2" class="form-control">
                             {{$projecttaskprogress[$i]['task_sequence_no_wbs']}}
                         </div>
-                        <div class="col-md-5" class="form-control">
+                        <div class="col-md-3" class="form-control">
                             <input class="form-control" name="task_name[{{$i}}]" value="{{$projecttaskprogress[$i]['task_name']}}">
                             </input>
                         </div>
-                        <div class="col-md-5" class="form-control
-                        @if($i%2==1)
-                            bg-primary text-white
-                        @else
-                           bg-grey-50
-                        @endif">
+                        <div class="col-md-4" class="form-control">
                             <Select name="task_owner[{{$i}}]" class="form-control">
                                 <option value="">Select Task Owner</option>
                                 @foreach($users->groupBy('id') as $rs)
@@ -203,15 +196,22 @@
                                 @endforeach
                             </Select>
                         </div>
+                        <div class="col-md-2">
+                            {{$projecttaskprogress[$i]['task_actual_start_date']}}
+                        </div>
                     </div>
+                    <hr class="py-0 my-0"></hr>
                 @endfor
                 <div class="row bg-grey-50 py-2">
                     <div class="col-md-1">
-                    <input type="checkbox" name="select_all" class="form-control" onclick="selectAll(this.checked)"></input>
+                        <input type="checkbox" name="select_all" class="form-control" onclick="selectAll(this.checked)"></input>
                     </div>
-                    <div class="col-md-11">
-                        <input type="submit" name="update" class="form-control col-md-2 btn btn-primary" value="Update Selected"></input>
-                        <input type="submit" name="destroy" class="form-control col-md-2 btn btn-danger" value="Delete Selected"></input>
+                    <div class="col-md-2 align-self-center">
+                        Check All
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="update" class="form-control col-md-3 btn btn-primary" value="Update Selected"></input>
+                        <input type="submit" name="destroy" class="form-control col-md-3 btn btn-danger" value="Delete Selected"></input>
                     </div>
                 </div>
             </form>
@@ -247,13 +247,7 @@
                 </div>
             </div>
             @foreach($projecttaskprogress as $rs)
-                <div class="row align-items-center 
-                @if($loop->iteration%2==1)
-                   bg-grey-50"
-                @else
-                    bg-primary text-white"
-                @endif
-                >
+                <div class="row align-items-center">
                     <div class="col-md-1">
                         {{$rs->task_sequence_no_wbs}}
                     </div>
@@ -262,17 +256,17 @@
                     </div>
                     <div class="col-md-2">
                         @if($rs->task_actual_start_date==NULL)
-                            <input class="form-control datepicker" type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" name="start[{{$loop->iteration-1}}]" data-date="{{$rs->task_actual_start_date}}" data-backdate="-{{$rs->backdated_date_days}}d"></input>
+                            <input class="form-control form-control-sm datepicker" type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" name="start[{{$loop->iteration-1}}]" data-date="{{$rs->task_actual_start_date}}" data-backdate="-{{$rs->backdated_date_days}}d"></input>
                         @else
-                            <input class="form-control" type="text" onkeydown="return false" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}" hidden></input>
+                            <input class="form-control form-control-sm datepicker" type="text" onkeydown="return false" class="datepicker" name="start[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_start_date }}" hidden></input>
                             {{date_format(date_create($rs->task_actual_start_date),"d-m-Y")}}
                         @endif
                     </div>
                     <div class="col-md-2">
-                        <input class="form-control datepicker" type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}" disabled></input>
+                        <input class="form-control form-control-sm datepicker" type="text" onkeydown="return false" onchange="validateEndDate('{{$loop->iteration-1}}')" name="end[{{$loop->iteration-1}}]" data-date="{{ $rs->task_actual_end_date }}" data-backdate="-{{$rs->backdated_date_days}}d" disabled></input>
                     </div>
                     <div class="col-md-1">
-                        <input class="form-control" type="number" min="{{$rs->task_progress_percentage}}" onchange="toggleEndDate('{{$loop->iteration-1}}')" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}"></input>
+                        <input class="form-control form-control-sm" type="number" min="{{$rs->task_progress_percentage}}" onchange="toggleEndDate('{{$loop->iteration-1}}')" max=100 step=20 name="progress[{{$loop->iteration-1}}]" value="{{ $rs->task_progress_percentage }}"></input>
                     </div>
                     <div class="col-md-2">
                         {{$rs->last_update_bywhom}}
@@ -281,6 +275,7 @@
                         <button class="form-control btn btn-warning" type="submit" name="updatetask[{{$loop->iteration-1}}]" value="{{$rs->id}}">Update</button>
                     </div>
                 </div>
+                <hr class="py-0 my-0"></hr>
             @endforeach
             </form>
             <script>
@@ -310,53 +305,48 @@
         @case('completed')
             <div class="container mx-0 px-0" name="data-table">
                 <div class="row bg-primary text-white" name="header">
-                    <div class="col-md-3 d-none">
+                    <div class="col-md-2 d-block">
                         <b>Task Sequence No. (WBS)</b>
                     </div>
-                    <div class="col-md-3 d-none">
+                    <div class="col-md-3 d-block">
                         <b>Task Name</b>
                     </div>
-                    <div class="col-md-3 d-none">
+                    <div class="col-md-3 d-block">
                         <b>Actual Start Date</b>
                     </div>
-                    <div class="col-md-3 d-none">
+                    <div class="col-md-3 d-block">
                         <b>Actual End Date</b>
                     </div>
-                    <div class="d-none">
+                    <div class="col-md-1 d-block">
                         <b>Project</b>
                     </div>
                 </div>
                 @foreach($projecttaskprogress as $rs)
-                    <div name="data" class="row
-                    @if($loop->iteration%2==1)
-                       bg-grey-50"
-                    @else
-                        bg-primary text-white"
-                    @endif
-                    >
-                        <div class="col-md-3">
+                    <div name="data" class="row">
+                        <div class="col-md-2 d-block">
                             {{$rs->task_sequence_no_wbs}}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 d-block">
                             {{$rs->task_name}}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 d-block">
                             {{date_format(date_create($rs->task_actual_start_date),"d/m/Y")}}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 d-block">
                             {{date_format(date_create($rs->task_actual_end_date),"d/m/Y")}}
                         </div>
-                        <div class="d-none">
+                        <div class="col-md-1 d-block">
                             {{$rs->project_name}}
                         </div>
                     </div>
+                    <hr class="py-0 my-0"></hr>
                 @endforeach
                 <div class="row align-items-center justify-content-between bg-secondary p-2 text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16" id="usadateformat" name="usadateformat" onclick="usaDateFormat() "><path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>
                     USA Date Format
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16" id="headersincludedinexcel" name="headersincludedinexcel" onclick="headersIncludedInExcel() "><path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16" id="headersincludedinexcel" name="headersincludedinexcel" onclick="headersIncludedInExcel() "><path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm-1.146 6.854-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/></svg>
                     Headers included in Excel
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16" id="projectcolumnincludedinexcel" name="projectcolumnincludedinexcel" onclick="projectColumnIncludedInExcel() "><path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16" id="projectcolumnincludedinexcel" name="projectcolumnincludedinexcel" onclick="projectColumnIncludedInExcel() "><path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm-1.146 6.854-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/></svg>
                     Project column included in Excel
                 </div>
                 <div class="row align-items-center justify-content-between bg-primary p-2 text-white">
