@@ -361,6 +361,7 @@
             <span>Something went wrong, please try again</span>
     @endswitch
     <hr class="border-primary border-5">
+    @if(in_array($currentModule,['create','update']))
     <div class="my-5 row justify-content-center">
         @if($total>0)
             @for($i=max(min($currentPage-5,$total-11),1);$i<min(max($currentPage+6,12),$total);$i++) 
@@ -376,5 +377,6 @@
             @endfor
         @endif
     </div>
+    @endif
 </div>
 @endsection

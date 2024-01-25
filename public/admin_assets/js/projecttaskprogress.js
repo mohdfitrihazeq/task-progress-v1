@@ -1,5 +1,5 @@
 function toggleEndDate(str) {
-    if(document.getElementsByName("progress["+str+"]")[0].value==100){
+    if(document.getElementsByName("progress["+str+"]")[0].value>=20){
         document.getElementsByName("end["+str+"]")[0].disabled=false;
     }
     else{
@@ -125,7 +125,7 @@ function fnExcelReport() {
         var y = x[i].getElementsByTagName("div");
         for(var j = 0;j<y.length;j++){
             if(y[j].classList.contains('d-none')==false){
-                tab_text = tab_text + "<td>" + y[j].innerHTML + "</td>";
+                tab_text = tab_text + '<td style="mso-number-format:' + "'\@'" + '">' + y[j].innerHTML + "</td>";
             }
         }
         tab_text = tab_text + "</tr><tr>";
