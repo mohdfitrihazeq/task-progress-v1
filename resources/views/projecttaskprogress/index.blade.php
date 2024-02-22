@@ -197,7 +197,9 @@
                             </Select>
                         </div>
                         <div class="col-md-2">
-                            {{$projecttaskprogress[$i]['task_actual_start_date']}}
+                            @if($projecttaskprogress[$i]['task_actual_start_date']!=null)
+                                {{date_format(date_create($projecttaskprogress[$i]['task_actual_start_date']),"d-m-Y")}}
+                            @endif
                         </div>
                     </div>
                     <hr class="py-0 my-0"></hr>

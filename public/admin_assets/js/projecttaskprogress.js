@@ -1,5 +1,5 @@
 function toggleEndDate(str) {
-    if(document.getElementsByName("progress["+str+"]")[0].value>=20){
+    if(document.getElementsByName("progress["+str+"]")[0].value==100){
         document.getElementsByName("end["+str+"]")[0].disabled=false;
     }
     else{
