@@ -73,8 +73,12 @@ class ProjectTaskProgressController extends Controller
                 $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_end_date');
                 break;
             case 'update':
-                $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_end_date')
-                ->where('user_login_name','=',$user->id);
+                if(in_array($user->role_name,['Master Super Admin - MSA','Super Super Admin - SSA','Assistant Project Manager - APM','Project Manager - PM','Project Director - PD'])){
+                    $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_end_date')->whereNotNull('user_login_name');
+                }
+                else{
+                    $projecttaskprogress = $projecttaskprogress->whereNull('task_actual_end_date')->where('user_login_name','=',$user->id);
+                }
                 break;
             case 'completed':
                 $projecttaskprogress = $projecttaskprogress->whereNotNull('task_actual_end_date');

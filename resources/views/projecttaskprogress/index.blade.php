@@ -6,7 +6,7 @@
         <div class="col-md-3 text-left">
             <h3><b>Task Planning</b></h3>
         </div>
-        @if(in_array(auth()->user()->role_name,['Master Super Admin - MSA','Super Super Admin - SSA','Project Manager - PM','Project Director - PD']))
+        @if(in_array(auth()->user()->role_name,['Master Super Admin - MSA','Super Super Admin - SSA','Assistant Project Manager - APM','Assistant Project Manager - APM','Project Manager - PM','Project Director - PD']))
         <div class="col text-left">
             @if($currentProjectId!=null)
             <a href="{{route('projecttaskprogress',['id'=>'create','id2'=>$currentProjectId,'id3'=>($currentModule=='create')*($currentPage)+($currentModule!='create')])}}">
